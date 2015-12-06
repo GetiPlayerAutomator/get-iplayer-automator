@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		1DDD58160DA1D0A300B32029 /* Interface.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* Interface.xib */; };
 		392A41A4169735340053DEA5 /* HTTPProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 392A41A3169735340053DEA5 /* HTTPProxy.m */; };
 		393D1DEE18A5BBB500F27880 /* RSRTVArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 393D1DED18A5BBB500F27880 /* RSRTVArrayController.m */; };
 		3975484D1622504F00470DD1 /* ttml2srt.py in Resources */ = {isa = PBXBuildFile; fileRef = 3975484C1622504F00470DD1 /* ttml2srt.py */; };
@@ -152,7 +152,7 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Interface.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -416,7 +416,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				D9CCF3CB1023485A009205BE /* dsa_pub.pem */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				1DDD58140DA1D0A300B32029 /* Interface.xib */,
 				D9CCF54B1025AAF9009205BE /* Growl Registration Ticket.growlRegDict */,
 				DFFF196613E96288007B52AC /* ReasonsForFailure.plist */,
 				D9CDC9E7186B8F2B0003A4E2 /* GetiPlayerAutomator.sdef */,
@@ -701,7 +701,7 @@
 				D9F668DB102C560500A9449B /* GetFireFoxURL.applescript in Resources */,
 				D9F66955102C5D1200A9449B /* GetCaminoURL.applescript in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				1DDD58160DA1D0A300B32029 /* Interface.xib in Resources */,
 				D904F04A1009F22E00D60BBF /* get_iplayer.pl in Resources */,
 				D9CCF3CC1023485A009205BE /* dsa_pub.pem in Resources */,
 				D9CCF54C1025AAF9009205BE /* Growl Registration Ticket.growlRegDict in Resources */,
@@ -832,12 +832,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+		1DDD58140DA1D0A300B32029 /* Interface.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				1DDD58150DA1D0A300B32029 /* English */,
 			);
-			name = MainMenu.xib;
+			name = Interface.xib;
 			sourceTree = "<group>";
 		};
 		D941D94D1025DB2B0012A75F /* JRFeedbackProvider.strings */ = {
