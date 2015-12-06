@@ -404,12 +404,22 @@
             [self addToLog:[NSString stringWithFormat:@"INFO: Downloading subtitles: %@", subtitleURL] noTag:YES];
             
             subtitlePath = [[show path] stringByAppendingPathExtension:@"xml"];
-            ASIHTTPRequest *downloadSubs = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:subtitleURL]];
-            [downloadSubs setDownloadDestinationPath:subtitlePath];
-            [downloadSubs setDelegate:self];
-            [downloadSubs setDidFinishSelector:@selector(subtitleRequestFinished:)];
-            [downloadSubs setDidFailSelector:@selector(subtitleRequestFinished:)];
-            [downloadSubs startAsynchronous];
+
+            NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+            AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:subtitleURL]];
+            NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request
+                                                                             progress:nil
+                                                                          destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+                                                                              NSURL *thumbnailPathURL = [NSURL fileURLWithPath:thumbnailPath];
+                                                                              return thumbnailPathURL;
+                                                                          }
+                                                                    completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                                                                        [self subtitleRequestFinished:(NSHTTPURLResponse *)response];
+                                                                    }
+                                                      ];
+            [downloadTask resume];
+            
         }
         else
         {
@@ -421,11 +431,11 @@
         [self convertSubtitlesFinished:nil];
     }
 }
-- (void)subtitleRequestFinished:(ASIHTTPRequest *)request
+- (void)subtitleRequestFinished:(NSHTTPURLResponse *)response
 {
-    if (request)
+    if (response)
     {
-        if ([request responseStatusCode] == 200)
+        if (response.statusCode == 200)
         {
             [self addToLog:@"INFO: Subtitles Download Completed" noTag:YES];
             if (![[subtitlePath pathExtension] isEqual: @"srt"])
