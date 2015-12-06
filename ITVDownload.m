@@ -23,27 +23,6 @@
 {
 	return [NSString stringWithFormat:@"ITV Download (ID=%@)", [show pid]];
 }
-- (id)initTest:(Programme *)tempShow proxy:(HTTPProxy *)aProxy
-{
-   if (!(self = [super init])) return nil;
-   proxy=aProxy;
-   show=tempShow;
-   attemptNumber=1;
-   nc = [NSNotificationCenter defaultCenter];
-   defaultsPrefix = @"ITV_";
-   running=TRUE;
-   
-   formatList = @[[[TVFormat alloc] init],[[TVFormat alloc] init]];
-   [formatList[0] setFormat:@"Flash - Standard"];
-   [formatList[1] setFormat:@"Flash - High"];
-   
-   isTest=true;
-   
-   [tempShow printLongDescription];
-   
-   [self launchMetaRequest];
-   return self;
-}
 - (id)initWithProgramme:(Programme *)tempShow itvFormats:(NSArray *)itvFormatList proxy:(HTTPProxy *)aProxy logController:(LogController *)logger
 {
    if (!(self = [super initWithLogController:logger])) return nil;
