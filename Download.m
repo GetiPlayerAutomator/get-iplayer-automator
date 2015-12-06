@@ -66,7 +66,7 @@
 		[nc postNotificationName:@"setPercentage" object:self userInfo:nil];
 	}
 }
-- (void)requestFailed:(ASIHTTPRequest *)request
+- (void)requestFailed:(AFHTTPRequestOperationManager *)request
 {
     [request startAsynchronous];
 }
@@ -287,16 +287,25 @@
             {
                 [self addToLog:@"INFO: Downloading thumbnail" noTag:YES];
                 thumbnailPath = [[show path] stringByAppendingPathExtension:@"jpg"];
-                ASIHTTPRequest *downloadThumb = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:thumbnailURL]];
-                [downloadThumb setDownloadDestinationPath:thumbnailPath];
-                [downloadThumb setDelegate:self];
-                [downloadThumb startAsynchronous];
-                [downloadThumb setDidFinishSelector:@selector(thumbnailRequestFinished:)];
-                [downloadThumb setDidFailSelector:@selector(thumbnailRequestFinished:)];
+                NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+                AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+                NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:thumbnailURL]];
+                NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request
+                                                                                 progress:nil
+                                                                              destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+                                                                                  NSURL *thumbnailPathURL = [NSURL fileURLWithPath:thumbnailPath];
+                                                                                  return thumbnailPathURL;
+                                                                              }
+                                                                        completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                                                                            [self thumbnailRequestFinished:(NSHTTPURLResponse *)response downloadPath:thumbnailPath];
+                                                                        }
+                                                          ];
+                [downloadTask resume];
+                
             }
             else
             {
-                [self thumbnailRequestFinished:nil];
+                [self thumbnailRequestFinished:nil downloadPath:nil];
             }
         }
         else
@@ -313,7 +322,7 @@
         [nc postNotificationName:@"DownloadFinished" object:show];
     }
 }
-- (void)thumbnailRequestFinished:(ASIHTTPRequest *)request
+- (void)thumbnailRequestFinished:(NSHTTPURLResponse *)response downloadPath:(NSString *)thumbnailDownloadPath
 {
     [self addToLog:@"INFO: Thumbnail Download Completed" noTag:YES];
     apTask = [[NSTask alloc] init];
@@ -324,7 +333,7 @@
     //[apTask setStandardError:apPipe];
     
     [apTask setLaunchPath:[[[NSBundle mainBundle].executablePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"AtomicParsley"]];
-    if (request && [request responseStatusCode] == 200)
+    if (response && response.statusCode == 200)
         [apTask setArguments:@[[NSString stringWithFormat:@"%@",[show path]],
                               @"--stik",@"value=10",
                               @"--TVNetwork",[show tvNetwork],
@@ -333,7 +342,7 @@
                               @"--TVEpisodeNum",[NSString stringWithFormat:@"%ld",(long)[show episode]],
                               @"--TVEpisode",[show episodeName],
                               @"--title",[show showName],
-                              @"--artwork",[request downloadDestinationPath],
+                              @"--artwork",thumbnailDownloadPath,
                               @"--comment",[show desc],
                               @"--description",[show desc],
                               @"--longdesc",[show desc],

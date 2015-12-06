@@ -9,8 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "HTTPProxy.h"
 #import "Programme.h"
-#import "ASIHTTPRequest.h"
 #import "LogController.h"
+#import <AFNetworking/AFNetworking.h>
 
 @interface Download : NSObject {
     NSNotificationCenter *nc;
@@ -75,7 +75,7 @@
     
     BOOL isFilm;
 
-    ASIHTTPRequest *currentRequest;
+    AFHTTPRequestOperationManager *currentRequest;
     
     //Download Test
     BOOL isTest;
