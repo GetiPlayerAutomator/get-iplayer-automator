@@ -10,8 +10,7 @@
 #import "NSString+HTML.h"
 #import "AppController.h"
 #import "HTTPProxy.h"
-#import "ASIHTTPRequest.h"
-//extern bool runDownloads;
+#import <AFNetworking/AFNetworking.h>
 
 
 @implementation Programme {
@@ -315,21 +314,22 @@
     }
     if (thumbURL) {
         NSLog(@"URL: %@", thumbURL);
-        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:thumbURL]];
-        [request setDelegate:self];
-        [request setDidFinishSelector:@selector(thumbnailRequestFinished:)];
-        [request setDidFailSelector:@selector(thumbnailRequestFinished:)];
-        [request setTimeOutSeconds:3];
-        [request setNumberOfTimesToRetryOnTimeout:3];
-        [request startAsynchronous];
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer = [AFImageResponseSerializer serializer];
+        [manager GET:thumbURL
+          parameters:nil
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                 thumbnail = responseObject;
+                 [self thumbnailRequestFinished];
+             }
+             failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 [self thumbnailRequestFinished];
+             }];
     }
 }
 
-- (void)thumbnailRequestFinished:(ASIHTTPRequest *)request
+- (void)thumbnailRequestFinished
 {
-    if (request.responseStatusCode == 200) {
-        thumbnail = [[NSImage alloc] initWithData:request.responseData];
-    }
     successfulRetrieval = @YES;
     extendedMetadataRetrieved = @YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ExtendedInfoRetrieved" object:self];
