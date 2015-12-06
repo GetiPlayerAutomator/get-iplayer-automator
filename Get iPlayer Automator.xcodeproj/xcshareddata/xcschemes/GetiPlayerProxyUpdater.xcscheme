@@ -17,7 +17,7 @@
                BlueprintIdentifier = "D91F9D51187151D600D4388B"
                BuildableName = "GetiPlayerProxyUpdater"
                BlueprintName = "GetiPlayerProxyUpdater"
-               ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+               ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "D91F9D51187151D600D4388B"
             BuildableName = "GetiPlayerProxyUpdater"
             BlueprintName = "GetiPlayerProxyUpdater"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "D91F9D51187151D600D4388B"
             BuildableName = "GetiPlayerProxyUpdater"
             BlueprintName = "GetiPlayerProxyUpdater"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "D91F9D51187151D600D4388B"
             BuildableName = "GetiPlayerProxyUpdater"
             BlueprintName = "GetiPlayerProxyUpdater"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

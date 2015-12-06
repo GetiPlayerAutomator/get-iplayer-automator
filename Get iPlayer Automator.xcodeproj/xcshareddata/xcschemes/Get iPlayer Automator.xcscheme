@@ -17,7 +17,7 @@
                BlueprintIdentifier = "8D1107260486CEB800E47090"
                BuildableName = "Get iPlayer Automator.app"
                BlueprintName = "Get iPlayer Automator"
-               ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+               ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "8D1107260486CEB800E47090"
             BuildableName = "Get iPlayer Automator.app"
             BlueprintName = "Get iPlayer Automator"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "8D1107260486CEB800E47090"
             BuildableName = "Get iPlayer Automator.app"
             BlueprintName = "Get iPlayer Automator"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "8D1107260486CEB800E47090"
             BuildableName = "Get iPlayer Automator.app"
             BlueprintName = "Get iPlayer Automator"
-            ReferencedContainer = "container:Get_iPlayer GUI.xcodeproj">
+            ReferencedContainer = "container:Get iPlayer Automator.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -156,7 +156,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		32CA4F630368D1EE00C91783 /* Get_iPlayer GUI_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Get_iPlayer GUI_Prefix.pch"; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* Get iPlayer Automator_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Get iPlayer Automator_Prefix.pch"; sourceTree = "<group>"; };
 		392A41A2169735340053DEA5 /* HTTPProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPProxy.h; sourceTree = "<group>"; };
 		392A41A3169735340053DEA5 /* HTTPProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPProxy.m; sourceTree = "<group>"; };
 		393D1DEC18A5BBB500F27880 /* RSRTVArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSRTVArrayController.h; sourceTree = "<group>"; };
@@ -395,7 +395,7 @@
 				3975484C1622504F00470DD1 /* ttml2srt.py */,
 				DFC8D40315C97310008E369F /* fourOD_token_decoder.py */,
 				D90EF1361029CB3100290A67 /* Scripting Headers */,
-				32CA4F630368D1EE00C91783 /* Get_iPlayer GUI_Prefix.pch */,
+				32CA4F630368D1EE00C91783 /* Get iPlayer Automator_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				D975D7EA19A11D9E00EEF909 /* UpdateBuildNumber.sh */,
 			);
@@ -674,7 +674,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Get_iPlayer GUI" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Get iPlayer Automator" */;
 			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -878,7 +878,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Get_iPlayer GUI_Prefix.pch";
+				GCC_PREFIX_HEADER = "Get iPlayer Automator_Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
@@ -917,7 +917,7 @@
 				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Get_iPlayer GUI_Prefix.pch";
+				GCC_PREFIX_HEADER = "Get iPlayer Automator_Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -1054,7 +1054,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Get_iPlayer GUI" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Get iPlayer Automator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
