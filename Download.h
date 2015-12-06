@@ -75,7 +75,7 @@
     
     BOOL isFilm;
 
-    AFHTTPRequestOperationManager *currentRequest;
+    AFHTTPSessionManager *sessionManager;
     
     //Download Test
     BOOL isTest;

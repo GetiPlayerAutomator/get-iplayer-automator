@@ -10,7 +10,7 @@
     NSURL *url;
     NSString *type;
     NSString *host;
-    NSInteger port;
+    NSNumber *port;
     NSString *user;
     NSString *password;
 }
@@ -21,7 +21,8 @@
 @property (readonly, copy) NSURL *url;
 @property (readonly, copy) NSString *type;
 @property (readonly, copy) NSString *host;
-@property (readonly, assign) NSInteger port;
+@property (readonly, copy) NSNumber *port;
 @property (readonly, copy) NSString *user;
 @property (readonly, copy) NSString *password;
+@property (readonly) NSDictionary *connectionProxyDictionary;
 @end

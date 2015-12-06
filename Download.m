@@ -66,10 +66,7 @@
 		[nc postNotificationName:@"setPercentage" object:self userInfo:nil];
 	}
 }
-- (void)requestFailed:(AFHTTPRequestOperationManager *)request
-{
-    [request startAsynchronous];
-}
+
 #pragma mark Message Processers
 - (void)processFLVStreamerMessage:(NSString *)message
 {
@@ -665,7 +662,7 @@
 }
 - (void)cancelDownload:(id)sender
 {
-    [currentRequest clearDelegatesAndCancel];
+    [sessionManager.operationQueue cancelAllOperations];
 	//Some basic cleanup.
 	[task interrupt];
 	[nc removeObserver:self name:NSFileHandleReadCompletionNotification object:fh];

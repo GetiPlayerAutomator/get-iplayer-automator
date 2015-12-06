@@ -7,7 +7,6 @@
 //
 
 #import "ITVDownload.h"
-#import "ASIHTTPRequest.h"
 #import "NSString+HTML.h"
 #import "ITVMediaFileEntry.h"
 
@@ -101,53 +100,58 @@
       body = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:@"/Applications/Get iPlayer Automator.app/Contents/Resources/Body"] encoding:NSUTF8StringEncoding];
    
    body = [body stringByReplacingOccurrencesOfString:@"!!!ID!!!" withString:[show realPID]];
-   
-   NSURL *requestURL = [NSURL URLWithString:@"http://mercury.itv.com/PlaylistService.svc"];
-   NSLog(@"DEBUG: Metadata URL: %@",requestURL);
-   if (verbose)
-      [self addToLog:[NSString stringWithFormat:@"DEBUG: Metadata URL: %@", requestURL] noTag:YES];
-   [currentRequest clearDelegatesAndCancel];
-   currentRequest = [ASIHTTPRequest requestWithURL:requestURL];
-   [currentRequest addRequestHeader:@"Referer" value:@"http://www.itv.com/mercury/Mercury_VideoPlayer.swf?v=1.5.309/[[DYNAMIC]]/2"];
-   [currentRequest addRequestHeader:@"Content-Type" value:@"text/xml; charset=utf-8"];
-   [currentRequest addRequestHeader:@"SOAPAction" value:@"\"http://tempuri.org/PlaylistService/GetPlaylist\""];
-   [currentRequest setRequestMethod:@"POST"];
-   [currentRequest setPostBody:[NSMutableData dataWithData:[body dataUsingEncoding:NSUTF8StringEncoding]]];
-   [currentRequest setDelegate:self];
-   [currentRequest setDidFailSelector:@selector(metaRequestFinished:)];
-   [currentRequest setDidFinishSelector:@selector(metaRequestFinished:)];
-   [currentRequest setTimeOutSeconds:10];
-   [currentRequest setNumberOfTimesToRetryOnTimeout:3];
-   [currentRequest addRequestHeader:@"Accept" value:@"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"];
-   if (proxy)
-   {
-      [currentRequest setProxyType:proxy.type];
-      [currentRequest setProxyHost:proxy.host];
-      if (proxy.port)
-         [currentRequest setProxyPort:(int)proxy.port];
-      if (proxy.user) {
-         [currentRequest setProxyUsername:proxy.user];
-         [currentRequest setProxyPassword:proxy.password];
-      }
-   }
+    
+    NSURLSessionConfiguration *sessionConfiguration = [[NSURLSessionConfiguration alloc] init];
+    
+    if (proxy)
+    {
+        sessionConfiguration.connectionProxyDictionary = proxy.connectionProxyDictionary;
+    };
+    
+    if (sessionManager)
+        [sessionManager.operationQueue cancelAllOperations];
+    sessionManager = [[AFHTTPSessionManager init] initWithBaseURL:nil sessionConfiguration:sessionConfiguration];
+    
+    AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+    [requestSerializer setValue:@"http://www.itv.com/mercury/Mercury_VideoPlayer.swf?v=1.5.309/[[DYNAMIC]]/2" forHTTPHeaderField:@"Referer"];
+    [requestSerializer setValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [requestSerializer setValue:@"\"http://tempuri.org/PlaylistService/GetPlaylist\"" forHTTPHeaderField:@"SOAPAction"];
+    [requestSerializer setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" forKey:@"Accept"];
+    requestSerializer.stringEncoding = NSUTF8StringEncoding;
+    
+    sessionManager.requestSerializer = requestSerializer;
+    sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    [sessionManager POST:@"http://mercury.itv.com/PlaylistService.svc"
+              parameters:body
+                 success:^(NSURLSessionDataTask * _Nonnull dataTask, id  _Nonnull responseObject) {
+                     [self metaRequestFinished:dataTask responseString:(NSString *)responseObject responseError:nil];
+                 } failure:^(NSURLSessionDataTask * _Nullable dataTask, NSError * _Nonnull error) {
+                     [self metaRequestFinished:dataTask responseString:nil responseError:error];
+                 }
+     ];
+    
    NSLog(@"INFO: Requesting Metadata.");
    [self addToLog:@"INFO: Requesting Metadata." noTag:YES];
-   [currentRequest startAsynchronous];
+
 }
 
--(void)metaRequestFinished:(ASIHTTPRequest *)request
+-(void)metaRequestFinished:(NSURLSessionDataTask *)dataTask responseString:(NSString *)responseString responseError:(NSError *)error
 {
+    NSHTTPURLResponse *response = (NSHTTPURLResponse *)dataTask.response;
+    
    if (!running)
       return;
-   NSLog(@"DEBUG: Metadata response status code: %d", [request responseStatusCode]);
+    
+   NSLog(@"DEBUG: Metadata response status code: %ld", (long)response.statusCode);
    if (verbose)
-      [self addToLog:[NSString stringWithFormat:@"DEBUG: Metadata response status code: %d", [request responseStatusCode]] noTag:YES];
-   NSString *responseString = [[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding];
+      [self addToLog:[NSString stringWithFormat:@"DEBUG: Metadata response status code: %ld", (long)response.statusCode] noTag:YES];
+    
    NSLog(@"DEBUG: Metadata response: %@",responseString);
    if (verbose)
       [self addToLog:[NSString stringWithFormat:@"DEBUG: Metadata response: %@", responseString] noTag:YES];
-   NSError *error = [request error];
-   if ([request responseStatusCode] == 0)
+
+   if (response.statusCode == 0)
    {
       NSLog(@"ERROR: No response received (probably a proxy issue): %@", (error ? [error localizedDescription] : @"Unknown error"));
       [self addToLog:[NSString stringWithFormat:@"ERROR: No response received (probably a proxy issue): %@", (error ? [error localizedDescription] : @"Unknown error")]];
@@ -176,7 +180,7 @@
       [self addToLog:@"Download Failed" noTag:NO];
       return;
    }
-   else if ([request responseStatusCode] != 200 || [responseString length] == 0)
+   else if (response.statusCode != 200 || [responseString length] == 0)
    {
       NSLog(@"ERROR: Could not retrieve programme metadata: %@", (error ? [error localizedDescription] : @"Unknown error"));
       [self addToLog:[NSString stringWithFormat:@"ERROR: Could not retrieve programme metadata: %@", (error ? [error localizedDescription] : @"Unknown error")]];
