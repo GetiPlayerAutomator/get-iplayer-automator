@@ -460,38 +460,50 @@
     
     NSLog(@"INFO: Metadata processed.");
     [self addToLog:@"INFO: Metadata processed." noTag:YES];
-    NSURL *dataURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.itv.com/_app/Dynamic/CatchUpData.ashx?ViewType=5&Filter=%@",[show realPID]]];
+    NSString *dataURL = [NSString stringWithFormat:@"http://www.itv.com/_app/Dynamic/CatchUpData.ashx?ViewType=5&Filter=%@",[show realPID]];
     NSLog(@"DEBUG: Programme data URL: %@",dataURL);
     if (verbose)
         [self addToLog:[NSString stringWithFormat:@"DEBUG: Programme data URL: %@", dataURL] noTag:YES];
-    [currentRequest clearDelegatesAndCancel];
-    currentRequest = [ASIHTTPRequest requestWithURL:dataURL];
-    [currentRequest setDidFailSelector:@selector(dataRequestFinished:)];
-    [currentRequest setDidFinishSelector:@selector(dataRequestFinished:)];
-    [currentRequest setTimeOutSeconds:10];
-    [currentRequest setNumberOfTimesToRetryOnTimeout:3];
-    [currentRequest setDelegate:self];
-    [currentRequest addRequestHeader:@"Accept" value:@"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"];
+    
+    AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+    [requestSerializer setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+    
+    if (sessionManager) {
+        [sessionManager.operationQueue cancelAllOperations];
+    }
+    sessionManager = [AFHTTPSessionManager manager];
+    
+    [sessionManager GET:dataURL
+             parameters:nil
+                success:^(NSURLSessionDataTask * _Nonnull dataTask, id  _Nonnull responseObject) {
+                    [self dataRequestFinished:dataTask responseString:(NSString *)responseObject responseError:nil];
+                }
+                failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    [self dataRequestFinished:dataTask responseString:nil responseError:error];
+                }
+     ];
+    
     NSLog(@"INFO: Requesting programme data.");
     [self addToLog:@"INFO: Requesting programme data." noTag:YES];
-    [currentRequest startAsynchronous];
 }
 
--(void)dataRequestFinished:(ASIHTTPRequest *)request
+-(void)dataRequestFinished:(NSURLSessionDataTask *)dataTask responseString:(NSString *)responseString responseError:(NSError *)error
 {
     if (!running)
         return;
     NSScanner *scanner = nil;
-    NSLog(@"DEBUG: Programme data response status code: %d", [request responseStatusCode]);
+    NSHTTPURLResponse *response = (NSHTTPURLResponse *)dataTask.response;
+    NSLog(@"DEBUG: Programme data response status code: %ld", (long)response.statusCode);
+    
     if (verbose)
-        [self addToLog:[NSString stringWithFormat:@"DEBUG: Programme data response status code: %d", [request responseStatusCode]] noTag:YES];
-    NSString *responseString = [[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding];
+        [self addToLog:[NSString stringWithFormat:@"DEBUG: Programme data response status code: %ld", (long)response.statusCode] noTag:YES];
+    
     NSLog(@"DEBUG: Programme data response: %@", responseString);
     if (verbose)
         [self addToLog:[NSString stringWithFormat:@"DEBUG: Programme data response: %@", responseString] noTag:YES];
-    NSError *error = [request error];
+
     NSString *description = nil, *showname = nil, *senum = nil, *epnum = nil, *epname = nil, *temp_showname = nil;
-    if ([request responseStatusCode] == 200 && [responseString length] > 0)
+    if (response.statusCode == 200 && [responseString length] > 0)
     {
         scanner = [NSScanner scannerWithString:responseString];
         [scanner scanUpToString:@"<h2>" intoString:nil];
