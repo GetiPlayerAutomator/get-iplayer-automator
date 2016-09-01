@@ -187,7 +187,9 @@
 {
     [logger addToLog:@"Retrieving Extended Metadata" :self];
     getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-    [getiPlayerProxy loadProxyInBackgroundForSelector:@selector(proxyRetrievalFinished:proxyDict:) withObject:nil onTarget:self silently:NO];
+    [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
+        [self proxyRetrievalFinished:nil proxyDict:proxyDictionary];
+    } silently:NO];
 }
 
 -(void)proxyRetrievalFinished:(id)sender proxyDict:(NSDictionary *)proxyDict
@@ -536,7 +538,9 @@
 {
     [logger addToLog:@"Retrieving Metadata For PID" :self];
     getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-    [getiPlayerProxy loadProxyInBackgroundForSelector:@selector(getNameFromPIDProxyLoadFinished:proxyDict:) withObject:nil onTarget:self silently:NO];
+    [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
+        [self getNameFromPIDProxyLoadFinished:nil proxyDict:proxyDictionary];
+    } silently:NO];
 }
 
 -(void)getNameFromPIDProxyLoadFinished:(id)sender proxyDict:(NSDictionary *)proxyDict
