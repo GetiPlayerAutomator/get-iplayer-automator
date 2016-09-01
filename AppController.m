@@ -397,7 +397,9 @@ NSDictionary *radioFormats;
     if ((![[[NSUserDefaults standardUserDefaults] objectForKey:@"QuickCache"] boolValue] || quickUpdateFailed) && [[[NSUserDefaults standardUserDefaults] valueForKey:@"AlwaysUseProxy"] boolValue])
     {
         getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-        [getiPlayerProxy loadProxyInBackgroundForSelector:@selector(updateCache:proxyDict:) withObject:sender onTarget:self silently:runScheduled];
+        [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
+            [self updateCache:sender proxyDict:proxyDictionary];
+        } silently:runScheduled];
     }
     else
     {
@@ -927,7 +929,9 @@ NSDictionary *radioFormats;
     }
     [self saveAppData]; //Save data in case of crash.
     getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-    [getiPlayerProxy loadProxyInBackgroundForSelector:@selector(startDownloads:proxyDict:) withObject:sender onTarget:self silently:runScheduled];
+    [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
+        [self startDownloads:sender proxyDict:proxyDictionary];
+    } silently:runScheduled];
 }
 
 - (void)startDownloads:(id)sender proxyDict:(NSDictionary *)proxyDict
@@ -1988,7 +1992,9 @@ NSDictionary *radioFormats;
 - (IBAction)startLiveTV:(id)sender
 {
     getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-    [getiPlayerProxy loadProxyInBackgroundForSelector:@selector(startLiveTV:proxyDict:) withObject:sender onTarget:self silently:NO];
+    [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
+        [self startLiveTV:sender proxyDict:proxyDictionary];
+    } silently:NO];
 }
 
 - (IBAction)startLiveTV:(id)sender proxyDict:(NSDictionary *)proxyDict
