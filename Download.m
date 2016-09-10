@@ -24,7 +24,7 @@
     return self;
 }
 - (id)initWithLogController:(LogController *)logger {
-    if ([self init]) {
+    if ((self = [self init])) {
         self->logger = logger;
         return self;
     }

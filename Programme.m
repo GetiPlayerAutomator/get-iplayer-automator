@@ -19,7 +19,8 @@
 
 - (id)initWithLogController:(LogController *)logger
 {
-    if (![self init]) return nil;
+    if (!(self = [self init])) return nil;
+	
     self->logger = logger;
     return self;
 }
@@ -52,6 +53,8 @@
 }
 - (id)initWithShow:(Programme *)show
 {
+	if (!(self = [super init])) return nil;
+	
     pid = [[NSString alloc] initWithString:[show pid]];
     showName = [[[NSString alloc] initWithString:[show showName]] stringByDecodingHTMLEntities];
     tvNetwork = [[NSString alloc] initWithString:[show tvNetwork]];

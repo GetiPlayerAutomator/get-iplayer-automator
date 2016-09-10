@@ -22,7 +22,7 @@
 }
 
 - (id)initWithLogger:(LogController *)logger {
-    if (![self init]) return nil;
+    if (!(self = [self init])) return nil;
     
     _logger = logger;
     

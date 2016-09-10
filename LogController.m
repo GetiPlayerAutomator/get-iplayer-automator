@@ -12,6 +12,8 @@
 
 - (id)init
 {
+	if (!(self = [super init])) return nil;
+	
    //Initialize Log
    NSString *version = [NSString stringWithFormat:@"%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
    NSLog(@"Get iPlayer Automator %@ Initialized.", version);
