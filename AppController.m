@@ -540,8 +540,10 @@ NSDictionary *radioFormats;
     else
     {
         NSError *moveError;
+		NSURL *url =[NSURL fileURLWithPath:[[@"~/Library/Application Support/Get iPlayer Automator" stringByExpandingTildeInPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.cache",typeUpdated]]];
+		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
         if (![[NSFileManager defaultManager] moveItemAtURL:downloadLocation
-                                                toURL:[NSURL URLWithString:[[@"~/Library/Application Support/Get iPlayer Automator" stringByExpandingTildeInPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.cache",typeUpdated]]]
+                                                toURL:url
                                                      error:&moveError]) {
             NSLog(@"Error when moving download cache: %@", moveError);
         }
