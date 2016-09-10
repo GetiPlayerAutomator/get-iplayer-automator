@@ -41,14 +41,10 @@ static GetiPlayerArguments *sharedController = nil;
 		NSMutableString *typeArgument = [[NSMutableString alloc] initWithString:@"--type="];
 		if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"CacheBBC_TV"] isEqualTo:@YES])
          [typeArgument appendString:@"tv,"];
-		if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"CacheITV_TV"] isEqualTo:@YES])
-         [typeArgument appendString:@"itv,"];
 		if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"CacheBBC_Radio"] isEqualTo:@YES])
          [typeArgument appendString:@"radio,"];
 		if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"CacheBBC_Podcasts"] isEqualTo:@YES])
          [typeArgument appendString:@"podcast,"];
-      if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"Cache4oD_TV"] isEqualTo:@YES])
-         [typeArgument appendString:@"ch4,"];
 		[typeArgument deleteCharactersInRange:NSMakeRange([typeArgument length]-1,1)];
 		currentTypeArgument = [typeArgument copy];
 		return [NSString stringWithString:typeArgument];
@@ -81,7 +77,7 @@ static GetiPlayerArguments *sharedController = nil;
 
 - (NSString *)standardListFormat
 {
-   return @"--listformat=<index>: <type>, ~<name> - <episode>~, <channel>, <web>";
+   return @"--listformat=<pid>: <type>, ~<name> - <episode>~, <channel>, <web>";
 }
 
 

@@ -13,6 +13,7 @@
 #import "Download.h"
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import "NilToStringTransformer.h"
+#import "EmptyToStringTransformer.h"
 #import "LogController.h"
 #import "GiASearch.h"
 #import "GetCurrentWebpage.h"
@@ -82,9 +83,7 @@
 	IBOutlet NSArrayController *tvFormatController;
 	IBOutlet NSArrayController *radioFormatController;
    IBOutlet NSArrayController *itvFormatController;
-   IBOutlet NSButton *itvTVCheckbox;
    IBOutlet NSPanel *prefsPanel;
-   IBOutlet NSButton *ch4TVCheckbox;
    
 	//Scheduling a Start
 	IBOutlet NSPanel *scheduleWindow;
@@ -93,17 +92,6 @@
 	NSTimer *scheduleTimer;
 	BOOL runScheduled;
 	
-	//Live TV
-	IBOutlet NSWindow *liveTVWindow;
-	IBOutlet NSArrayController *liveTVChannelController;
-	IBOutlet NSTableView *liveTVTableView;
-	IBOutlet NSButton *liveStart;
-	IBOutlet NSButton *liveStop;
-	NSTask *getiPlayerStreamer;
-	NSTask *mplayerStreamer;
-	NSPipe *liveTVPipe;
-	NSPipe *liveTVError;
-   
    //Download Solutions
    IBOutlet NSWindow *solutionsWindow;
    IBOutlet NSArrayController *solutionsArrayController;
@@ -114,6 +102,11 @@
    //PVR list editing
    NilToStringTransformer *nilToEmptyStringTransformer;
    NilToStringTransformer *nilToAsteriskTransformer;
+    
+   // Format preferences
+   EmptyToStringTransformer *tvFormatTransformer;
+   EmptyToStringTransformer *radioFormatTransformer;
+   EmptyToStringTransformer *itvFormatTransformer;
    
    //Verbose Logging
    BOOL verbose;
@@ -168,11 +161,6 @@
 - (IBAction)showScheduleWindow:(id)sender;
 - (IBAction)scheduleStart:(id)sender;
 - (IBAction)cancelSchedule:(id)sender;
-
-//Live TV
-- (IBAction)showLiveTVWindow:(id)sender;
-- (IBAction)startLiveTV:(id)sender;
-- (IBAction)stopLiveTV:(id)sender;
 
 
 //Download Solutions

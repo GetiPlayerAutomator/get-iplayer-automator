@@ -19,7 +19,6 @@
                 <outlet property="addToQueue" destination="513" id="707"/>
                 <outlet property="application" destination="-2" id="1067"/>
                 <outlet property="categoriesField" destination="KIo-78-9Im" id="Tfd-wV-jO3"/>
-                <outlet property="ch4TVCheckbox" destination="1517" id="1539"/>
                 <outlet property="currentIndicator" destination="505" id="795"/>
                 <outlet property="currentProgress" destination="508" id="796"/>
                 <outlet property="datePicker" destination="1150" id="1161"/>
@@ -31,19 +30,12 @@
                 <outlet property="imageView" destination="uXw-sP-r5Y" id="BI7-Nf-B9r"/>
                 <outlet property="infoView" destination="P2i-j0-vSu" id="Y7b-Wf-rNC"/>
                 <outlet property="itvFormatController" destination="1432" id="1439"/>
-                <outlet property="itvTVCheckbox" destination="856" id="1440"/>
                 <outlet property="lastBroadcastField" destination="snH-qy-SJv" id="cJB-UM-xuc"/>
-                <outlet property="liveStart" destination="1179" id="1197"/>
-                <outlet property="liveStop" destination="1181" id="1196"/>
-                <outlet property="liveTVChannelController" destination="1183" id="1195"/>
-                <outlet property="liveTVTableView" destination="1173" id="1194"/>
-                <outlet property="liveTVWindow" destination="1165" id="1193"/>
                 <outlet property="loadingLabel" destination="cAi-OW-zbo" id="7BJ-dy-HBc"/>
                 <outlet property="loadingView" destination="ryX-Qd-Wi8" id="iNJ-wU-9EU"/>
                 <outlet property="log" destination="616" id="677"/>
                 <outlet property="logger" destination="BZI-HO-NFo" id="LLH-v9-nI4"/>
                 <outlet property="mainWindow" destination="371" id="1066"/>
-                <outlet property="modeSizeController" destination="fAe-Gc-WEJ" id="eWI-zV-CwY"/>
                 <outlet property="numbersField" destination="McO-fX-SaA" id="K0F-zH-qB9"/>
                 <outlet property="popover" destination="yim-h9-S9A" id="dBw-DD-LJG"/>
                 <outlet property="prefsPanel" destination="547" id="1471"/>
@@ -163,11 +155,6 @@
                 <binding destination="621" name="contentArray" keyPath="radioFormatList" id="1140"/>
             </connections>
         </arrayController>
-        <arrayController objectClassName="LiveTVChannel" editable="NO" id="1183" userLabel="Live TV Array">
-            <declaredKeys>
-                <string>channel</string>
-            </declaredKeys>
-        </arrayController>
         <window title="Pick a time..." allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ScheduleStartWindow" animationBehavior="default" id="1148" userLabel="Delayed Start" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
@@ -232,7 +219,11 @@
             </view>
             <point key="canvasLocation" x="860" y="682.5"/>
         </window>
-        <dictionaryController objectClassName="_NSControllerKeyValuePair" id="fAe-Gc-WEJ" userLabel="modeSizeController"/>
+        <arrayController id="rST-BW-7sr" userLabel="modeSizeController">
+            <connections>
+                <binding destination="GOW-LV-QLu" name="sortDescriptors" keyPath="modeSizeSorters" id="TWw-l1-8F4"/>
+            </connections>
+        </arrayController>
         <menu title="AMainMenu" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
                 <menuItem title="Get iPlayer Automator" id="56">
@@ -488,8 +479,7 @@
                     <textField verticalHuggingPriority="750" id="689">
                         <rect key="frame" x="19" y="518" width="737" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" placeholderString="Search for Shows...  (Last 7 days only for BBC)" bezelStyle="round" id="690">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" placeholderString="Search for Shows...  (BBC only, last 7 days only)" bezelStyle="round" id="690">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -506,7 +496,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" headerView="470" id="469">
-                                    <rect key="frame" x="0.0" y="0.0" width="770" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="755" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -556,7 +546,7 @@
                                                 </binding>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn width="473" minWidth="10" maxWidth="3.4028229999999999e+38" id="503">
+                                        <tableColumn width="474" minWidth="10" maxWidth="3.4028229999999999e+38" id="503">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Show Name - Episode Name">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -641,7 +631,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" headerView="494" id="493">
-                                    <rect key="frame" x="0.0" y="0.0" width="768" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="753" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <animations/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -894,18 +884,17 @@
         <window title="PVR Manager" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PVRManagerWindow" animationBehavior="default" id="517" userLabel="PVR Manager" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="60" width="623" height="450"/>
+            <rect key="contentRect" x="196" y="60" width="624" height="450"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
             <value key="minSize" type="size" width="623" height="450"/>
             <view key="contentView" id="518">
-                <rect key="frame" x="0.0" y="0.0" width="623" height="450"/>
+                <rect key="frame" x="0.0" y="0.0" width="624" height="450"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="776">
-                        <rect key="frame" x="20" y="408" width="274" height="22"/>
+                        <rect key="frame" x="20" y="408" width="362" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" placeholderString="Search for Shows..." bezelStyle="round" id="777">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" placeholderString="Search for Shows...  (BBC only, last 7 days only)" bezelStyle="round" id="777">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -914,8 +903,8 @@
                             <action selector="pvrSearch:" target="621" id="951"/>
                         </connections>
                     </textField>
-                    <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" minValue="16" maxValue="100" doubleValue="16" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="521">
-                        <rect key="frame" x="270" y="411" width="16" height="16"/>
+                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" minValue="16" maxValue="100" doubleValue="16" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="521">
+                        <rect key="frame" x="355" y="411" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
                     </progressIndicator>
@@ -1101,7 +1090,7 @@
                         </textFieldCell>
                     </textField>
                     <button horizontalHuggingPriority="750" verticalHuggingPriority="750" id="545">
-                        <rect key="frame" x="303" y="404" width="25" height="25"/>
+                        <rect key="frame" x="392" y="404" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
                         <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="546">
@@ -1160,7 +1149,7 @@
                 </subviews>
                 <animations/>
             </view>
-            <point key="canvasLocation" x="497.5" y="982"/>
+            <point key="canvasLocation" x="178" y="834"/>
         </window>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PreferencesWindow" animationBehavior="default" id="547" userLabel="Preferences" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES"/>
@@ -1507,18 +1496,6 @@
                                                 </binding>
                                             </connections>
                                         </button>
-                                        <button id="1517">
-                                            <rect key="frame" x="328" y="306" width="69" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <animations/>
-                                            <buttonCell key="cell" type="check" title="4oD TV" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" imageScaling="proportionallyDown" inset="2" id="1518">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <binding destination="668" name="value" keyPath="values.Cache4oD_TV" id="1528"/>
-                                            </connections>
-                                        </button>
                                         <button id="978">
                                             <rect key="frame" x="396" y="193" width="22" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1807,268 +1784,33 @@
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </tableHeaderCell>
-                                                                <comboBoxCell key="dataCell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" buttonBordered="NO" numberOfVisibleItems="5" id="1084">
+                                                                <popUpButtonCell key="dataCell" type="bevel" title="Please select..." bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="bezel" imageScaling="proportionallyDown" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="fiI-sm-4j3" id="61j-0h-zHy">
+                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    <allowedInputSourceLocales>
-                                                                        <string>ti_ER</string>
-                                                                        <string>ar_LY</string>
-                                                                        <string>kok_IN</string>
-                                                                        <string>mk_MK</string>
-                                                                        <string>eo</string>
-                                                                        <string>fr_CH</string>
-                                                                        <string>sw</string>
-                                                                        <string>so_ET</string>
-                                                                        <string>gv</string>
-                                                                        <string>ar_BH</string>
-                                                                        <string>hy_AM_REVISED</string>
-                                                                        <string>it_IT</string>
-                                                                        <string>bg_BG</string>
-                                                                        <string>ro</string>
-                                                                        <string>es_HN</string>
-                                                                        <string>en_BE</string>
-                                                                        <string>is</string>
-                                                                        <string>kw_GB</string>
-                                                                        <string>kl</string>
-                                                                        <string>ga_IE</string>
-                                                                        <string>nl_NL</string>
-                                                                        <string>uk</string>
-                                                                        <string>fr_CA</string>
-                                                                        <string>sk_SK</string>
-                                                                        <string>es_AR</string>
-                                                                        <string>en_MT</string>
-                                                                        <string>fr_BE</string>
-                                                                        <string>ca</string>
-                                                                        <string>cs_CZ</string>
-                                                                        <string>fr_FR</string>
-                                                                        <string>en_ZA</string>
-                                                                        <string>sl</string>
-                                                                        <string>fa</string>
-                                                                        <string>so</string>
-                                                                        <string>pt</string>
-                                                                        <string>et_EE</string>
-                                                                        <string>eu_ES</string>
-                                                                        <string>fi</string>
-                                                                        <string>de_CH</string>
-                                                                        <string>or</string>
-                                                                        <string>gu_IN</string>
-                                                                        <string>mt_MT</string>
-                                                                        <string>nb</string>
-                                                                        <string>ms</string>
-                                                                        <string>es_CR</string>
-                                                                        <string>as_IN</string>
-                                                                        <string>ar_SA</string>
-                                                                        <string>am</string>
-                                                                        <string>pl</string>
-                                                                        <string>hu</string>
-                                                                        <string>lv</string>
-                                                                        <string>ar_DZ</string>
-                                                                        <string>ur</string>
-                                                                        <string>pt_PT</string>
-                                                                        <string>eu</string>
-                                                                        <string>so_DJ</string>
-                                                                        <string>de</string>
-                                                                        <string>en_IN</string>
-                                                                        <string>hr_HR</string>
-                                                                        <string>ar_AE</string>
-                                                                        <string>gu</string>
-                                                                        <string>lt</string>
-                                                                        <string>te_IN</string>
-                                                                        <string>ar_KW</string>
-                                                                        <string>sr_Latn</string>
-                                                                        <string>de_AT</string>
-                                                                        <string>en_US</string>
-                                                                        <string>es_PR</string>
-                                                                        <string>pl_PL</string>
-                                                                        <string>uz_Cyrl_UZ</string>
-                                                                        <string>ar_EG</string>
-                                                                        <string>it_CH</string>
-                                                                        <string>nl</string>
-                                                                        <string>haw_US</string>
-                                                                        <string>is_IS</string>
-                                                                        <string>en_IE</string>
-                                                                        <string>kl_GL</string>
-                                                                        <string>ps</string>
-                                                                        <string>zh_Hans_CN</string>
-                                                                        <string>ar</string>
-                                                                        <string>ru_UA</string>
-                                                                        <string>th_TH</string>
-                                                                        <string>fr_LU</string>
-                                                                        <string>uz_Latn_UZ</string>
-                                                                        <string>az</string>
-                                                                        <string>bn_IN</string>
-                                                                        <string>es_MX</string>
-                                                                        <string>kk_KZ</string>
-                                                                        <string>en_US_POSIX</string>
-                                                                        <string>el_GR</string>
-                                                                        <string>he</string>
-                                                                        <string>es_UY</string>
-                                                                        <string>nn_NO</string>
-                                                                        <string>sr</string>
-                                                                        <string>sk</string>
-                                                                        <string>ur_PK</string>
-                                                                        <string>es_PA</string>
-                                                                        <string>sv_FI</string>
-                                                                        <string>zh</string>
-                                                                        <string>es_DO</string>
-                                                                        <string>en_CA</string>
-                                                                        <string>en_BW</string>
-                                                                        <string>de_DE</string>
-                                                                        <string>haw</string>
-                                                                        <string>pa_IN</string>
-                                                                        <string>sq</string>
-                                                                        <string>kw</string>
-                                                                        <string>ga</string>
-                                                                        <string>ml</string>
-                                                                        <string>mt</string>
-                                                                        <string>af_ZA</string>
-                                                                        <string>az_Latn</string>
-                                                                        <string>ko_KR</string>
-                                                                        <string>fa_AF</string>
-                                                                        <string>ps_AF</string>
-                                                                        <string>be_BY</string>
-                                                                        <string>bn</string>
-                                                                        <string>it</string>
-                                                                        <string>sr_Latn_CS</string>
-                                                                        <string>zh_Hans</string>
-                                                                        <string>as</string>
-                                                                        <string>ms_MY</string>
-                                                                        <string>be</string>
-                                                                        <string>sl_SI</string>
-                                                                        <string>fa_IR</string>
-                                                                        <string>es_EC</string>
-                                                                        <string>kok</string>
-                                                                        <string>es_PY</string>
-                                                                        <string>ta_IN</string>
-                                                                        <string>am_ET</string>
-                                                                        <string>es_CO</string>
-                                                                        <string>uz_Latn</string>
-                                                                        <string>el</string>
-                                                                        <string>zh_Hant_MO</string>
-                                                                        <string>kk</string>
-                                                                        <string>kn</string>
-                                                                        <string>zh_Hant</string>
-                                                                        <string>en</string>
-                                                                        <string>es_PE</string>
-                                                                        <string>pt_BR</string>
-                                                                        <string>ar_LB</string>
-                                                                        <string>en_NZ</string>
-                                                                        <string>es_ES</string>
-                                                                        <string>en_HK</string>
-                                                                        <string>es_BO</string>
-                                                                        <string>hu_HU</string>
-                                                                        <string>sr_Cyrl</string>
-                                                                        <string>nb_NO</string>
-                                                                        <string>sv</string>
-                                                                        <string>vi</string>
-                                                                        <string>ti_ET</string>
-                                                                        <string>bg</string>
-                                                                        <string>om</string>
-                                                                        <string>de_LU</string>
-                                                                        <string>en_SG</string>
-                                                                        <string>id_ID</string>
-                                                                        <string>ur_IN</string>
-                                                                        <string>uz</string>
-                                                                        <string>da</string>
-                                                                        <string>ru_RU</string>
-                                                                        <string>es_US</string>
-                                                                        <string>es_VE</string>
-                                                                        <string>ko</string>
-                                                                        <string>ja</string>
-                                                                        <string>af</string>
-                                                                        <string>ar_YE</string>
-                                                                        <string>lt_LT</string>
-                                                                        <string>om_KE</string>
-                                                                        <string>zh_Hans_SG</string>
-                                                                        <string>es_NI</string>
-                                                                        <string>he_IL</string>
-                                                                        <string>en_PK</string>
-                                                                        <string>en_PH</string>
-                                                                        <string>az_Cyrl_AZ</string>
-                                                                        <string>en_AU</string>
-                                                                        <string>az_Cyrl</string>
-                                                                        <string>ta</string>
-                                                                        <string>ar_MA</string>
-                                                                        <string>sw_KE</string>
-                                                                        <string>tr_TR</string>
-                                                                        <string>zh_Hant_HK</string>
-                                                                        <string>en_ZW</string>
-                                                                        <string>de_BE</string>
-                                                                        <string>mk</string>
-                                                                        <string>pa</string>
-                                                                        <string>da_DK</string>
-                                                                        <string>es_GT</string>
-                                                                        <string>es</string>
-                                                                        <string>ar_IQ</string>
-                                                                        <string>az_Latn_AZ</string>
-                                                                        <string>so_SO</string>
-                                                                        <string>lv_LV</string>
-                                                                        <string>mr</string>
-                                                                        <string>te</string>
-                                                                        <string>sq_AL</string>
-                                                                        <string>ml_IN</string>
-                                                                        <string>uk_UA</string>
-                                                                        <string>hi_IN</string>
-                                                                        <string>ca_ES</string>
-                                                                        <string>ar_TN</string>
-                                                                        <string>id</string>
-                                                                        <string>om_ET</string>
-                                                                        <string>cs</string>
-                                                                        <string>fo_FO</string>
-                                                                        <string>hy_AM</string>
-                                                                        <string>en_GB</string>
-                                                                        <string>sr_Cyrl_CS</string>
-                                                                        <string>gl_ES</string>
-                                                                        <string>sw_TZ</string>
-                                                                        <string>ro_RO</string>
-                                                                        <string>cy</string>
-                                                                        <string>fr</string>
-                                                                        <string>ms_BN</string>
-                                                                        <string>so_KE</string>
-                                                                        <string>tr</string>
-                                                                        <string>gl</string>
-                                                                        <string>cy_GB</string>
-                                                                        <string>ar_OM</string>
-                                                                        <string>fo</string>
-                                                                        <string>es_CL</string>
-                                                                        <string>sv_SE</string>
-                                                                        <string>ar_JO</string>
-                                                                        <string>uz_Cyrl</string>
-                                                                        <string>zh_Hant_TW</string>
-                                                                        <string>et</string>
-                                                                        <string>hi</string>
-                                                                        <string>fi_FI</string>
-                                                                        <string>nn</string>
-                                                                        <string>th</string>
-                                                                        <string>ar_SY</string>
-                                                                        <string>ja_JP</string>
-                                                                        <string>gv_GB</string>
-                                                                        <string>hy</string>
-                                                                        <string>en_VI</string>
-                                                                        <string>kn_IN</string>
-                                                                        <string>ti</string>
-                                                                        <string>ar_QA</string>
-                                                                        <string>es_SV</string>
-                                                                        <string>hr</string>
-                                                                        <string>ru</string>
-                                                                        <string>ar_SD</string>
-                                                                        <string>mr_IN</string>
-                                                                        <string>vi_VN</string>
-                                                                        <string>nl_BE</string>
-                                                                        <string>or_IN</string>
-                                                                    </allowedInputSourceLocales>
-                                                                    <objectValues>
-                                                                        <string>Flash - HD</string>
-                                                                        <string>Flash - Very High</string>
-                                                                        <string>Flash - High</string>
-                                                                        <string>Flash - Standard</string>
-                                                                        <string>Flash - Low</string>
-                                                                    </objectValues>
-                                                                </comboBoxCell>
+                                                                    <menu key="menu" id="71A-ny-E7h">
+                                                                        <items>
+                                                                            <menuItem title="Please select..." state="on" id="fiI-sm-4j3">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash - HD" state="on" id="k2x-Yo-cqd"/>
+                                                                            <menuItem title="Flash - Very High" id="QPv-lH-1Bk"/>
+                                                                            <menuItem title="Flash - High" id="81i-mQ-EQ5"/>
+                                                                            <menuItem title="Flash - Standard" id="tY8-Gc-9rQ">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash - Low" id="1gB-ry-erP">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                        </items>
+                                                                    </menu>
+                                                                </popUpButtonCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="1106" name="value" keyPath="arrangedObjects.format" id="1114"/>
+                                                                    <binding destination="1106" name="selectedValue" keyPath="arrangedObjects.format" id="i4B-ih-pN8">
+                                                                        <dictionary key="options">
+                                                                            <string key="NSValueTransformerName">TVFormatTransformer</string>
+                                                                        </dictionary>
+                                                                    </binding>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
@@ -2115,20 +1857,27 @@
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </tableHeaderCell>
-                                                                <comboBoxCell key="dataCell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" buttonBordered="NO" completes="NO" numberOfVisibleItems="4" id="1091">
+                                                                <popUpButtonCell key="dataCell" type="bevel" title="Please select..." bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="bezel" imageScaling="proportionallyDown" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="KJk-TX-uSU" id="qRO-OL-IEE">
+                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    <objectValues>
-                                                                        <string>Flash AAC - High</string>
-                                                                        <string>Flash AAC - Standard</string>
-                                                                        <string>Flash AAC - Low</string>
-                                                                        <string>Flash - MP3</string>
-                                                                    </objectValues>
-                                                                </comboBoxCell>
+                                                                    <menu key="menu" id="rsB-Oh-LhM">
+                                                                        <items>
+                                                                            <menuItem title="Please select..." state="on" id="KJk-TX-uSU">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash AAC - High" id="o8l-i9-SFq"/>
+                                                                            <menuItem title="Flash AAC - Standard" id="glb-6P-Pu3"/>
+                                                                            <menuItem title="Flash AAC - Low" id="eZ8-k4-Tug"/>
+                                                                        </items>
+                                                                    </menu>
+                                                                </popUpButtonCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="1134" name="value" keyPath="arrangedObjects.format" id="1137"/>
+                                                                    <binding destination="1134" name="selectedValue" keyPath="arrangedObjects.format" id="v9Y-bx-WrT">
+                                                                        <dictionary key="options">
+                                                                            <string key="NSValueTransformerName">RadioFormatTransformer</string>
+                                                                        </dictionary>
+                                                                    </binding>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
@@ -2250,22 +1999,36 @@
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </tableHeaderCell>
-                                                                <comboBoxCell key="dataCell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" buttonBordered="NO" completes="NO" numberOfVisibleItems="6" id="1428">
+                                                                <popUpButtonCell key="dataCell" type="bevel" title="Please select..." bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="bezel" imageScaling="proportionallyDown" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="d0L-Z2-yTh" id="zRE-0Y-zd8">
+                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="smallSystem"/>
-                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    <objectValues>
-                                                                        <string>Flash - HD</string>
-                                                                        <string>Flash - Very High</string>
-                                                                        <string>Flash - High</string>
-                                                                        <string>Flash - Standard</string>
-                                                                        <string>Flash - Low</string>
-                                                                        <string>Flash - Very Low</string>
-                                                                    </objectValues>
-                                                                </comboBoxCell>
+                                                                    <menu key="menu" id="1OB-Xn-EuL">
+                                                                        <items>
+                                                                            <menuItem title="Please select..." state="on" id="d0L-Z2-yTh">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash - HD" id="KiS-Ge-uAn"/>
+                                                                            <menuItem title="Flash - Very High" id="5NM-zS-0hk"/>
+                                                                            <menuItem title="Flash - High" id="7DG-z0-TvK"/>
+                                                                            <menuItem title="Flash - Standard" id="So9-rR-fp1">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash - Low" id="aq7-E5-mfx">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                            <menuItem title="Flash - Very Low" id="rkF-2L-ilO">
+                                                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                                            </menuItem>
+                                                                        </items>
+                                                                    </menu>
+                                                                </popUpButtonCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
-                                                                    <binding destination="1432" name="value" keyPath="arrangedObjects.format" id="1434"/>
+                                                                    <binding destination="1432" name="selectedValue" keyPath="arrangedObjects.format" id="HWj-zG-UZ1">
+                                                                        <dictionary key="options">
+                                                                            <string key="NSValueTransformerName">ITVFormatTransformer</string>
+                                                                        </dictionary>
+                                                                    </binding>
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
@@ -2366,6 +2129,7 @@
                 </subviews>
                 <animations/>
             </view>
+            <point key="canvasLocation" x="497" y="385"/>
         </window>
         <window title="Download History" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="DownloadHistoryWindow" animationBehavior="default" id="1212" userLabel="Download History">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -2524,102 +2288,6 @@
                 <animations/>
             </view>
         </window>
-        <window title="Watch Live..." allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="WatchLiveWindow" animationBehavior="default" id="1165" userLabel="Live TV">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="280" width="321" height="230"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
-            <view key="contentView" id="1166">
-                <rect key="frame" x="0.0" y="0.0" width="321" height="230"/>
-                <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <textField verticalHuggingPriority="750" id="1167">
-                        <rect key="frame" x="17" y="193" width="109" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pick a Channel..." id="1168">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <scrollView horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="1170">
-                        <rect key="frame" x="20" y="55" width="281" height="124"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" id="twM-Qr-f6W">
-                            <rect key="frame" x="1" y="1" width="279" height="122"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="1173">
-                                    <rect key="frame" x="0.0" y="0.0" width="279" height="19"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
-                                    <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                    <tableColumns>
-                                        <tableColumn editable="NO" width="276" minWidth="40" maxWidth="1000" id="1175">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
-                                            </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="1178">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            <connections>
-                                                <binding destination="1183" name="value" keyPath="arrangedObjects.channel" id="1201"/>
-                                            </connections>
-                                        </tableColumn>
-                                    </tableColumns>
-                                </tableView>
-                            </subviews>
-                            <animations/>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </clipView>
-                        <animations/>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="1172">
-                            <rect key="frame" x="-100" y="-100" width="223" height="15"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <animations/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="1171">
-                            <rect key="frame" x="-100" y="-100" width="15" height="133"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <animations/>
-                        </scroller>
-                    </scrollView>
-                    <button verticalHuggingPriority="750" id="1179">
-                        <rect key="frame" x="211" y="7" width="96" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Start" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1180">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="startLiveTV:" target="621" id="1198"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" id="1181">
-                        <rect key="frame" x="106" y="7" width="96" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1182">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="stopLiveTV:" target="621" id="1199"/>
-                        </connections>
-                    </button>
-                </subviews>
-                <animations/>
-            </view>
-        </window>
         <window title="Log" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="LogWindow" animationBehavior="default" id="611" userLabel="Log">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
@@ -2661,7 +2329,7 @@
                             <animations/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="614">
-                            <rect key="frame" x="454" y="1" width="16" height="380"/>
+                            <rect key="frame" x="455" y="1" width="15" height="380"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <animations/>
                         </scroller>
@@ -2685,21 +2353,21 @@
         <window title="Cache Info" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="CacheInfoWindow" animationBehavior="default" id="882" userLabel="Help Panel: CacheInfo" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="300" width="397" height="210"/>
+            <rect key="contentRect" x="196" y="300" width="397" height="227"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
             <view key="contentView" id="883">
-                <rect key="frame" x="0.0" y="0.0" width="397" height="210"/>
+                <rect key="frame" x="0.0" y="0.0" width="397" height="227"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="884">
-                        <rect key="frame" x="17" y="20" width="363" height="170"/>
+                        <rect key="frame" x="17" y="13" width="360" height="194"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
                         <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" id="885">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Select the types of items you would like cached. An item must be cached in order for it to show up in search or be downloaded. However, the more types of items you choose to be cached, the longer it will take for the cache to be updated.
+                            <string key="title">Select the types of items you would like cached. An item must be cached in order for it to show up in search results or to be downloaded. However, the more types of items you choose to be cached, the longer it will take for the cache to be updated.
 
-Please Note: The searchable/downloadable types will not be updated until the cache has been updated either manually by selecting the menu item or automatically by restarting the application.</string>
+Please Note: The searchable/downloadable types will not be updated until the cache has been updated either manually by selecting the menu item or automatically - if the cache refresh time limit has been exceeded - by restarting the application.</string>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                         </textFieldCell>
@@ -2707,6 +2375,7 @@ Please Note: The searchable/downloadable types will not be updated until the cac
                 </subviews>
                 <animations/>
             </view>
+            <point key="canvasLocation" x="232.5" y="835.5"/>
         </window>
         <window title="Cache Refresh Info" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="CacheRefreshInfoWindow" animationBehavior="default" id="895" userLabel="Help Panel: CacheRefresh" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
@@ -2737,7 +2406,7 @@ Please Note: The searchable/downloadable types will not be updated until the cac
             <rect key="contentRect" x="690" y="385" width="432" height="244"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
             <view key="contentView" id="783">
-                <rect key="frame" x="0.0" y="5" width="432" height="244"/>
+                <rect key="frame" x="0.0" y="0.0" width="432" height="244"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="785">
@@ -2748,7 +2417,7 @@ Please Note: The searchable/downloadable types will not be updated until the cac
                             <font key="font" metaFont="system"/>
                             <string key="title">Please enter the name of the programme or series you would like to download. After you find what you want, select it, then click "Add to Queue". 
 
-Note: Only the types of shows you select in the preferences will show up here. 
+Note: Only the types of shows you select in the preferences will show up here.  You can only search BBC programmes.
 
 Note 2: Due to the way search is currently implemented, BBC shows older than 7 days will not show up even though they may still be available. To download shows which are older, either manually paste in their PID or open them in your browser and press 'Use Current Webpage'.</string>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -2770,7 +2439,7 @@ Note 2: Due to the way search is currently implemented, BBC shows older than 7 d
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="1259">
-                        <rect key="frame" x="17" y="20" width="398" height="255"/>
+                        <rect key="frame" x="17" y="37" width="398" height="238"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <animations/>
                         <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" id="1260">
@@ -2779,7 +2448,7 @@ Note 2: Due to the way search is currently implemented, BBC shows older than 7 d
 
 Custom series can be added. Use the + button in the lower left hand corner of the series link list. Text cells are editable. Leading and trailing whitespace will be removed from edited values.  An asterisk can be used in the TV Network column if episodes from any network should be recorded.  If you leave the TV Network column blank, an asterisk will be inserted automatically.
 
-Note: Only the types of shows you select in the preferences will show up here.</string>
+Note: Only the types of shows you select in the preferences will show up here. You can only series-link BBC programmes.</string>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                         </textFieldCell>
@@ -2945,7 +2614,7 @@ DQ
             </connections>
         </popover>
         <customView id="kd9-ZF-rkk" userLabel="Popover View">
-            <rect key="frame" x="0.0" y="0.0" width="663" height="323"/>
+            <rect key="frame" x="0.0" y="0.0" width="713" height="323"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView wantsLayer="YES" id="ryX-Qd-Wi8" userLabel="Loading Info View">
@@ -2960,8 +2629,7 @@ DQ
                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="cAi-OW-zbo">
                             <rect key="frame" x="18" y="13" width="295" height="17"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <animations/>
-                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Loading Episode Info:" id="XLQ-Se-5nS">
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Loading Episode Info" id="XLQ-Se-5nS">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2971,7 +2639,7 @@ DQ
                     <animations/>
                 </customView>
                 <customView wantsLayer="YES" id="P2i-j0-vSu" userLabel="Episode Info View">
-                    <rect key="frame" x="0.0" y="0.0" width="663" height="323"/>
+                    <rect key="frame" x="0.0" y="0.0" width="786" height="323"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uXw-sP-r5Y">
@@ -3055,21 +2723,37 @@ DQ
                             </textFieldCell>
                         </textField>
                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="cbA-Cy-Yab">
-                            <rect key="frame" x="374" y="20" width="269" height="135"/>
+                            <rect key="frame" x="374" y="20" width="311" height="135"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <clipView key="contentView" id="x0P-rA-GeF">
-                                <rect key="frame" x="1" y="17" width="267" height="117"/>
+                                <rect key="frame" x="1" y="0.0" width="309" height="134"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="v8t-qS-vxG" id="aGq-Qk-MC8">
-                                        <rect key="frame" x="0.0" y="0.0" width="267" height="19"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="309" height="19"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <animations/>
                                         <size key="intercellSpacing" width="3" height="2"/>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         <tableColumns>
-                                            <tableColumn width="116" minWidth="40" maxWidth="1000" id="BCS-cW-IrU">
+                                            <tableColumn identifier="" width="110" minWidth="40" maxWidth="1000" id="Lvd-Y0-YIB">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Version">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ln7-Pn-kgH">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="rST-BW-7sr" name="value" keyPath="arrangedObjects.version" id="CFs-Rn-xBn"/>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn width="100" minWidth="40" maxWidth="1000" id="BCS-cW-IrU">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Mode">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -3082,10 +2766,10 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 <connections>
-                                                    <binding destination="fAe-Gc-WEJ" name="value" keyPath="arrangedObjects.key" id="90m-MQ-dy9"/>
+                                                    <binding destination="rST-BW-7sr" name="value" keyPath="arrangedObjects.mode" id="RoF-Z0-acb"/>
                                                 </connections>
                                             </tableColumn>
-                                            <tableColumn width="145" minWidth="40" maxWidth="1000" id="YpI-IS-RSF">
+                                            <tableColumn width="90" minWidth="40" maxWidth="1000" id="YpI-IS-RSF">
                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Size">
                                                     <font key="font" metaFont="smallSystem"/>
                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -3098,10 +2782,13 @@ DQ
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 <connections>
-                                                    <binding destination="fAe-Gc-WEJ" name="value" keyPath="arrangedObjects.value" id="HC5-3h-Frc"/>
+                                                    <binding destination="rST-BW-7sr" name="value" keyPath="arrangedObjects.size" id="nFD-LK-UQt"/>
                                                 </connections>
                                             </tableColumn>
                                         </tableColumns>
+                                        <connections>
+                                            <binding destination="rST-BW-7sr" name="content" keyPath="arrangedObjects" id="Dad-qr-VE6"/>
+                                        </connections>
                                     </tableView>
                                 </subviews>
                                 <animations/>
@@ -3109,7 +2796,7 @@ DQ
                             </clipView>
                             <animations/>
                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="9W4-jh-ruF">
-                                <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                <rect key="frame" x="1" y="119" width="384" height="15"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <animations/>
                             </scroller>
@@ -3119,7 +2806,7 @@ DQ
                                 <animations/>
                             </scroller>
                             <tableHeaderView key="headerView" id="v8t-qS-vxG">
-                                <rect key="frame" x="0.0" y="0.0" width="267" height="17"/>
+                                <rect key="frame" x="0.0" y="0.0" width="309" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <animations/>
                             </tableHeaderView>
@@ -3188,7 +2875,7 @@ DQ
                     <animations/>
                 </customView>
             </subviews>
-            <animations/>
+            <point key="canvasLocation" x="510.5" y="447.5"/>
         </customView>
         <customObject id="BZI-HO-NFo" customClass="LogController">
             <connections>
@@ -3209,7 +2896,7 @@ DQ
                 <outlet property="lastBroadcastField" destination="snH-qy-SJv" id="gP7-Cx-2QQ"/>
                 <outlet property="loadingLabel" destination="cAi-OW-zbo" id="eNT-sb-Q58"/>
                 <outlet property="loadingView" destination="ryX-Qd-Wi8" id="csE-tM-3fH"/>
-                <outlet property="modeSizeController" destination="fAe-Gc-WEJ" id="XUm-bg-y9e"/>
+                <outlet property="modeSizeController" destination="rST-BW-7sr" id="13K-0O-Xbw"/>
                 <outlet property="numbersField" destination="McO-fX-SaA" id="lzQ-Ch-O0A"/>
                 <outlet property="popover" destination="yim-h9-S9A" id="ONL-a3-wmf"/>
                 <outlet property="retrievingInfoIndicator" destination="lwa-7m-lrw" id="My2-VC-qfX"/>
@@ -3219,6 +2906,19 @@ DQ
                 <outlet property="typeField" destination="IDs-bQ-KLx" id="N6B-Pi-36L"/>
             </connections>
         </customObject>
+        <menu id="Pnm-tl-9hW">
+            <items>
+                <menuItem title="Item 1" id="frs-kL-yWu">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 2" id="WVt-N0-GcJ">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 3" id="OZv-Hl-KOG">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+        </menu>
     </objects>
     <resources>
         <image name="log" width="32" height="32"/>

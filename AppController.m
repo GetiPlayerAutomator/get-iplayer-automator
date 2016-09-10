@@ -14,7 +14,6 @@
 #import "Growl.framework/Headers/GrowlApplicationBridge.h"
 #import <Sparkle/Sparkle.h>
 #import "JRFeedbackController.h"
-#import "LiveTVChannel.h"
 #import "ReasonForFailure.h"
 #import "Chrome.h"
 #import <AFNetworking/AFNetworking.h>
@@ -59,10 +58,7 @@ NSDictionary *radioFormats;
     defaultValues[@"AutoRetryTime"] = @"30";
     defaultValues[@"AddCompletedToiTunes"] = @YES;
     defaultValues[@"DefaultBrowser"] = @"Safari";
-    defaultValues[@"DefaultFormat"] = @"iPhone";
-    defaultValues[@"AlternateFormat"] = @"Flash - Standard";
     defaultValues[@"CacheBBC_TV"] = @YES;
-    defaultValues[@"CacheITV_TV"] = @YES;
     defaultValues[@"CacheBBC_Radio"] = @NO;
     defaultValues[@"CacheBBC_Podcasts"] = @NO;
     defaultValues[@"CacheExpiryTime"] = @"4";
@@ -75,9 +71,6 @@ NSDictionary *radioFormats;
     defaultValues[@"RemoveOldSeries"] = @NO;
     defaultValues[@"QuickCache"] = @YES;
     defaultValues[@"TagShows"] = @YES;
-    // TODO: remove 4oD
-    // set 4oD off by default
-    defaultValues[@"Cache4oD_TV"] = @NO;
     defaultValues[@"TestProxy"] = @YES;
     defaultValues[@"ShowDownloadedInSearch"] = @YES;
     
@@ -93,6 +86,12 @@ NSDictionary *radioFormats;
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"SignedNew"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AudioDescribed"];
     }
+
+    // remove obsolete preferences
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"DefaultFormat"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AlternateFormat"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CacheITV_TV"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"Cache4oD_TV"];
     
     //Make sure Application Support folder exists
     NSString *folder = @"~/Library/Application Support/Get iPlayer Automator/";
@@ -123,22 +122,20 @@ NSDictionary *radioFormats;
     quickUpdateFailed=NO;
     nilToEmptyStringTransformer = [[NilToStringTransformer alloc] init];
     nilToAsteriskTransformer = [[NilToStringTransformer alloc] initWithString:@"*"];
+    tvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
+    radioFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
+    itvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
     [NSValueTransformer setValueTransformer:nilToEmptyStringTransformer forName:@"NilToEmptyStringTransformer"];
     [NSValueTransformer setValueTransformer:nilToAsteriskTransformer forName:@"NilToAsteriskTransformer"];
+    [NSValueTransformer setValueTransformer:tvFormatTransformer forName:@"TVFormatTransformer"];
+    [NSValueTransformer setValueTransformer:radioFormatTransformer forName:@"RadioFormatTransformer"];
+    [NSValueTransformer setValueTransformer:itvFormatTransformer forName:@"ITVFormatTransformer"];
     verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"Verbose"];
     return self;
 }
 #pragma mark Delegate Methods
 - (void)awakeFromNib
 {
-#ifdef __x86_64__
-    [itvTVCheckbox setEnabled:YES];
-#else
-    [itvTVCheckbox setEnabled:NO];
-    [itvTVCheckbox setState:NSOffState];
-    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:NO] forKey:@"CacheITV_TV"];
-#endif
-    
     //Initialize Search Results Click Actions
     [searchResultsTable setTarget:self];
     [searchResultsTable setDoubleAction:@selector(addToQueue:)];
@@ -154,11 +151,8 @@ NSDictionary *radioFormats;
         [fileManager createDirectoryAtPath:folder withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
-    // TODO: remove 4oD
-    // disable 4oD and delete CH4 cache
-    [[NSUserDefaults standardUserDefaults] setValue:@NO forKey:@"Cache4oD_TV"];
-    [ch4TVCheckbox setState:NSOffState];
-    [ch4TVCheckbox setEnabled:NO];
+    // remove obsolete cache files
+    [fileManager removeItemAtPath:[folder stringByAppendingPathComponent:@"itv.cache"] error:nil];
     [fileManager removeItemAtPath:[folder stringByAppendingPathComponent:@"ch4.cache"] error:nil];
     
     NSString *filename = @"Queue.automatorqueue";
@@ -215,9 +209,6 @@ NSDictionary *radioFormats;
         }
     }
     
-    // TODO: Remove 4oD
-    BOOL hasCached4oD = [[rootObject valueForKey:@"hasUpdatedCacheFor4oD"] boolValue];
-    
     filename = @"ITVFormats.automator";
     filePath = [folder stringByAppendingPathComponent:filename];
     @try {
@@ -247,7 +238,7 @@ NSDictionary *radioFormats;
         RadioFormat *format2 = [[RadioFormat alloc] init];
         [format2 setFormat:@"Flash AAC - Standard"];
         RadioFormat *format3 = [[RadioFormat alloc] init];
-        [format3 setFormat:@"Flash - MP3"];
+        [format3 setFormat:@"Flash AAC - Low"];
         [radioFormatController addObjects:@[format1,format2,format3]];
     }
     if ([[itvFormatController arrangedObjects] count] == 0)
@@ -270,22 +261,12 @@ NSDictionary *radioFormats;
         [logger addToLog:[NSString stringWithFormat:@"ERROR: Growl initialisation failed: %@: %@", [e name], [e description]]];
     }
     
-    //Populate Live TV Channel List
-    LiveTVChannel *bbcOne = [[LiveTVChannel alloc] initWithChannelName:@"BBC One"];
-    LiveTVChannel *bbcTwo = [[LiveTVChannel alloc] initWithChannelName:@"BBC Two"];
-    LiveTVChannel *bbcNews24 = [[LiveTVChannel alloc] initWithChannelName:@"BBC News 24"];
-    [liveTVChannelController setContent:@[bbcOne,bbcTwo,bbcNews24]];
-    [liveTVTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-    
     //Remove SWFinfo
     NSString *infoPath = @"~/.swfinfo";
     infoPath = [infoPath stringByExpandingTildeInPath];
     if ([fileManager fileExistsAtPath:infoPath]) [fileManager removeItemAtPath:infoPath error:nil];
     
-    if (hasCached4oD)
-        [self updateCache:nil];
-    else
-        [self updateCache:@""];
+    [self updateCache:nil];
 }
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application
 {
@@ -518,20 +499,15 @@ NSDictionary *radioFormats;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         if (!lastUpdate || ([[NSDate date] timeIntervalSinceDate:lastUpdate] > ([[defaults objectForKey:@"CacheExpiryTime"] intValue]*3600)) || [[sender class] isEqualTo:[@"" class]])
         {
-            typesToCache = [[NSMutableArray alloc] initWithCapacity:5];
+            typesToCache = [[NSMutableArray alloc] initWithCapacity:3];
             if ([[defaults objectForKey:@"CacheBBC_TV"] boolValue]) [typesToCache addObject:@"tv"];
-            if ([[defaults objectForKey:@"CacheITV_TV"] boolValue]) [typesToCache addObject:@"itv"];
             if ([[defaults objectForKey:@"CacheBBC_Radio"] boolValue]) [typesToCache addObject:@"radio"];
             if ([[defaults objectForKey:@"CacheBBC_Podcasts"] boolValue]) [typesToCache addObject:@"podcast"];
-            // TODO: Remove 4oD
-            if ([[defaults objectForKey:@"Cache4oD_TV"] boolValue]) [typesToCache addObject:@"ch4"];
             
-            NSArray *urlKeys = @[@"tv",@"itv",@"radio",@"podcast",@"ch4"];
+            NSArray *urlKeys = @[@"tv",@"radio",@"podcast"];
             NSArray *urlObjects = @[@"http://tom-tech.com/get_iplayer/cache/tv.cache",
-                                    @"http://tom-tech.com/get_iplayer/cache/itv.cache",
                                     @"http://tom-tech.com/get_iplayer/cache/radio.cache",
-                                    @"http://tom-tech.com/get_iplayer/cache/podcast.cache",
-                                    @"http://tom-tech.com/get_iplayer/cache/ch4.cache"];
+                                    @"http://tom-tech.com/get_iplayer/cache/podcast.cache"];
             updateURLDic = [[NSDictionary alloc] initWithObjects:urlObjects forKeys:urlKeys];
             
             nextToCache=0;
@@ -1030,8 +1006,6 @@ NSDictionary *radioFormats;
                 {
                     if ([[show tvNetwork] hasPrefix:@"ITV"])
                         currentDownload = [[ITVDownload alloc] initWithProgramme:show itvFormats:[itvFormatController arrangedObjects] proxy:proxy logController:logger];
-                    /*else if ([[show tvNetwork] hasPrefix:@"4oD"])
-                     currentDownload = [[FourODDownload alloc] initWithProgramme:show proxy:proxy];*/
                     else
                         currentDownload = [[BBCDownload alloc] initWithProgramme:show
                                                                        tvFormats:[tvFormatController arrangedObjects]
@@ -1242,8 +1216,6 @@ NSDictionary *radioFormats;
             {
                 if ([[nextShow tvNetwork] hasPrefix:@"ITV"])
                     currentDownload = [[ITVDownload alloc] initWithProgramme:nextShow itvFormats:[itvFormatController arrangedObjects] proxy:proxy logController:logger];
-                /*else if ([[nextShow tvNetwork] hasPrefix:@"4oD"])
-                 currentDownload = [[FourODDownload alloc] initWithProgramme:nextShow proxy:proxy];*/
                 else
                     currentDownload = [[BBCDownload alloc] initWithProgramme:nextShow
                                                                    tvFormats:[tvFormatController arrangedObjects]
@@ -1421,7 +1393,7 @@ NSDictionary *radioFormats;
             
             NSMutableArray *autoRecordArgs = [[NSMutableArray alloc] initWithObjects:getiPlayerPath,
                                               [GetiPlayerArguments sharedController].noWarningArg,@"--nopurge",
-                                              @"--listformat=<index>: <type>, ~<name> - <episode>~, <channel>, <timeadded>, <pid>,<web>",
+                                              @"--listformat=<pid>: <type>, ~<name> - <episode>~, <channel>, <timeadded>, <pid>,<web>",
                                               cacheExpiryArgument,
                                               typeArgument,
                                               [GetiPlayerArguments sharedController].profileDirArg,
@@ -1654,7 +1626,6 @@ NSDictionary *radioFormats;
     
     [rootObject setValue:[tvFormatController arrangedObjects] forKey:@"tvFormats"];
     [rootObject setValue:[radioFormatController arrangedObjects] forKey:@"radioFormats"];
-    [rootObject setValue:@YES forKey:@"hasUpdatedCacheFor4oD"];
     [NSKeyedArchiver archiveRootObject:rootObject toFile:filePath];
     
     filename = @"ITVFormats.automator";
@@ -1738,7 +1709,7 @@ NSDictionary *radioFormats;
                 else
                 {
                     [logger performSelectorOnMainThread:@selector(addToLog:) withObject:@"iTunes did not accept file." waitUntilDone:YES];
-                    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_8) { //10.8 or older
+                    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8) { //10.8 or older
                         [logger performSelectorOnMainThread:@selector(addToLog:) withObject:@"Try setting iTunes to open in 32-bit mode." waitUntilDone:YES];
                         [self performSelectorOnMainThread:@selector(thirtyTwoBitModeAlert) withObject:nil waitUntilDone:NO];
                     }
@@ -1853,13 +1824,9 @@ NSDictionary *radioFormats;
     [sharedDefaults removeObjectForKey:@"AutoRetryTime"];
     [sharedDefaults removeObjectForKey:@"AddCompletedToiTunes"];
     [sharedDefaults removeObjectForKey:@"DefaultBrowser"];
-    [sharedDefaults removeObjectForKey:@"DefaultFormat"];
-    [sharedDefaults removeObjectForKey:@"AlternateFormat"];
     [sharedDefaults removeObjectForKey:@"CacheBBC_TV"];
-    [sharedDefaults removeObjectForKey:@"CacheITV_TV"];
     [sharedDefaults removeObjectForKey:@"CacheBBC_Radio"];
     [sharedDefaults removeObjectForKey:@"CacheBBC_Podcasts"];
-    [sharedDefaults removeObjectForKey:@"Cache4oD_TV"];
     [sharedDefaults removeObjectForKey:@"CacheExpiryTime"];
     [sharedDefaults removeObjectForKey:@"Verbose"];
     [sharedDefaults removeObjectForKey:@"SeriesLinkStartup"];
@@ -1966,102 +1933,6 @@ NSDictionary *radioFormats;
     [mainWindow setDocumentEdited:NO];
     runScheduled=NO;
 }
-
-#pragma mark Live TV
-- (IBAction)showLiveTVWindow:(id)sender
-{
-    if (!runDownloads)
-    {
-        [liveTVWindow makeKeyAndOrderFront:self];
-    }
-    else
-    {
-        NSAlert *downloadRunning = [NSAlert alertWithMessageText:@"Downloads are Running!"
-                                                   defaultButton:@"Continue"
-                                                 alternateButton:@"Cancel"
-                                                     otherButton:nil
-                                       informativeTextWithFormat:@"You may experience choppy playback while downloads are running."];
-        NSInteger response = [downloadRunning runModal];
-        if (response == NSAlertDefaultReturn)
-        {
-            [liveTVWindow makeKeyAndOrderFront:self];
-        }
-    }
-}
-
-- (IBAction)startLiveTV:(id)sender
-{
-    getiPlayerProxy = [[GetiPlayerProxy alloc] initWithLogger:logger];
-    [getiPlayerProxy loadProxyInBackgroundWithCompletionHandler:^(NSDictionary *proxyDictionary) {
-        [self startLiveTV:sender proxyDict:proxyDictionary];
-    } silently:NO];
-}
-
-- (IBAction)startLiveTV:(id)sender proxyDict:(NSDictionary *)proxyDict
-{
-    getiPlayerProxy = nil;
-    if ([proxyDict[@"proxy"] code] == kProxyLoadCancelled)
-        return;
-    getiPlayerStreamer = [[NSTask alloc] init];
-    mplayerStreamer = [[NSTask alloc] init];
-    liveTVPipe = [[NSPipe alloc] init];
-    liveTVError = [[NSPipe alloc] init];
-    
-    [getiPlayerStreamer setLaunchPath:@"/usr/bin/perl"];
-    [getiPlayerStreamer setStandardOutput:liveTVPipe];
-    [getiPlayerStreamer setStandardError:liveTVPipe];
-    [mplayerStreamer setStandardInput:liveTVPipe];
-    [mplayerStreamer setLaunchPath:[[NSBundle mainBundle] pathForResource:@"mplayer" ofType:nil]];
-    [mplayerStreamer setStandardError:liveTVError];
-    [mplayerStreamer setStandardOutput:liveTVError];
-    
-    //Get selected channel
-    LiveTVChannel *selectedChannel = [liveTVChannelController arrangedObjects][[liveTVChannelController selectionIndex]];
-    
-    //Set Proxy Arguments
-    NSString *proxyArg = NULL;
-    NSString *partialProxyArg = NULL;
-    if (proxy)
-    {
-        proxyArg = [[NSString alloc] initWithFormat:@"-p%@", [proxy url]];
-        if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"AlwaysUseProxy"] boolValue])
-        {
-            partialProxyArg = @"--partial-proxy";
-        }
-    }
-    
-    //Prepare Arguments
-    NSArray *args = @[[[NSBundle mainBundle] pathForResource:@"get_iplayer" ofType:@"pl"],
-                      [GetiPlayerArguments sharedController].profileDirArg,
-                      @"--stream",
-                      @"--modes=flashnormal",
-                      @"--type=livetv",
-                      [selectedChannel channel],
-                      //@"--player=mplayer -cache 3072 -",
-                      // [NSString stringWithFormat:@"--player=\"%@\" -cache 3072 -", [[NSBundle mainBundle] pathForResource:@"mplayer" ofType:nil]],
-                      proxyArg,
-                      partialProxyArg];
-    [getiPlayerStreamer setArguments:args];
-    
-    [mplayerStreamer setArguments:@[@"-cache",@"3072",@"-"]];
-    
-    
-    [getiPlayerStreamer launch];
-    [mplayerStreamer launch];
-    [liveStart setEnabled:NO];
-    [liveStop setEnabled:YES];
-}
-
-- (IBAction)stopLiveTV:(id)sender
-{
-    [getiPlayerStreamer interrupt];
-    [mplayerStreamer interrupt];
-    [liveStart setEnabled:YES];
-    [liveStop setEnabled:NO];
-}
-
-#pragma mark Proxy
-
 
 @synthesize getiPlayerPath;
 @end

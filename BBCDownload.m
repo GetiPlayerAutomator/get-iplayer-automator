@@ -13,8 +13,8 @@
 {
    NSArray *tvFormatKeys = @[@"Flash - HD",@"Flash - Very High",@"Flash - High",@"Flash - Standard",@"Flash - Low"];
    NSArray *tvFormatObjects = @[@"flashhd",@"flashvhigh",@"flashhigh",@"flashstd",@"flashlow"];
-   NSArray *radioFormatKeys = @[@"Flash AAC - High",@"Flash AAC - Standard",@"Flash AAC - Low",@"Flash - MP3"];
-   NSArray *radioFormatObjects = @[@"flashaachigh",@"flashaacstd",@"flashaaclow",@"flashaudio"];
+   NSArray *radioFormatKeys = @[@"Flash AAC - High",@"Flash AAC - Standard",@"Flash AAC - Low"];
+   NSArray *radioFormatObjects = @[@"flashaachigh",@"flashaacstd",@"flashaaclow"];
 	tvFormats = [[NSDictionary alloc] initWithObjects:tvFormatObjects forKeys:tvFormatKeys];
 	radioFormats = [[NSDictionary alloc] initWithObjects:radioFormatObjects forKeys:radioFormatKeys];
 }
@@ -71,9 +71,7 @@
 	NSString *noWarningArg = @"--nocopyright";
 	NSString *noPurgeArg = @"--nopurge";
 	NSString *id3v2Arg = [[NSString alloc] initWithFormat:@"--id3v2=%@", [executablesPath stringByAppendingPathComponent:@"id3v2"]];
-	NSString *mplayerArg = [[NSString alloc] initWithFormat:@"--mplayer=%@", [executablesPath stringByAppendingPathComponent:@"mplayer"]];
-   NSString *rtmpdumpArg = [[NSString alloc] initWithFormat:@"--rtmpdump=%@", [executablesPath stringByAppendingPathComponent:@"rtmpdump-2.4"]];
-	NSString *lameArg = [[NSString alloc] initWithFormat:@"--lame=%@", [executablesPath stringByAppendingPathComponent:@"lame"]];
+    NSString *rtmpdumpArg = [[NSString alloc] initWithFormat:@"--rtmpdump=%@", [executablesPath stringByAppendingPathComponent:@"rtmpdump"]];
 	NSString *atomicParsleyArg = [[NSString alloc] initWithFormat:@"--atomicparsley=%@", [executablesPath stringByAppendingPathComponent:@"AtomicParsley"]];
 	NSString *ffmpegArg = [[NSString alloc] initWithFormat:@"--ffmpeg=%@", [executablesPath stringByAppendingPathComponent:@"ffmpeg"]];
 	NSString *downloadPathArg = [[NSString alloc] initWithFormat:@"--output=%@", downloadPath];
@@ -81,11 +79,7 @@
    
    NSLog(@"ID3V2: %@", id3v2Arg);
    
-	NSString *getArg;
-	if ([[show processedPID] boolValue])
-		getArg = @"--get";
-	else
-		getArg = @"--pid";
+	NSString *getArg = @"--pid";
 	NSString *searchArg = [[NSString alloc] initWithFormat:@"%@", [show pid]];
    
    //AudioDescribed & Signed
@@ -107,7 +101,7 @@
 	profileDirArg = [[NSString alloc] initWithFormat:@"--profile-dir=%@", appSupportFolder];
 	
    //Add Arguments that can't be NULL
-	NSMutableArray *args = [[NSMutableArray alloc] initWithObjects:getiPlayerPath,profileDirArg,noWarningArg,noPurgeArg,id3v2Arg,mplayerArg,rtmpdumpArg,lameArg,atomicParsleyArg,cacheExpiryArg,downloadPathArg,subDirArg,formatArg,getArg,searchArg,@"--attempts=5",@"--keep-all",@"--fatfilename",@"--thumbsize=6",@"--tag-hdvideo",@"--tag-longdesc",@"--isodate",versionArg,ffmpegArg,proxyArg,partialProxyArg,nil];
+	NSMutableArray *args = [[NSMutableArray alloc] initWithObjects:getiPlayerPath,profileDirArg,noWarningArg,noPurgeArg,id3v2Arg,rtmpdumpArg,atomicParsleyArg,cacheExpiryArg,downloadPathArg,subDirArg,formatArg,getArg,searchArg,@"--attempts=5",@"--keep-all",@"--fatfilename",@"--thumbsize=6",@"--tag-hdvideo",@"--tag-longdesc",@"--isodate",versionArg,ffmpegArg,proxyArg,partialProxyArg,nil];
    //Verbose?
    if (verbose)
 		[args addObject:@"--verbose"];
@@ -142,7 +136,6 @@
 	[task setStandardError:errorPipe];
    
    NSMutableDictionary *envVariableDictionary = [NSMutableDictionary dictionaryWithDictionary:[task environment]];
-   envVariableDictionary[@"DYLD_LIBRARY_PATH"] = [bundle resourcePath];
    envVariableDictionary[@"HOME"] = [@"~" stringByExpandingTildeInPath];
    envVariableDictionary[@"PERL_UNICODE"] = @"AS";
    [task setEnvironment:envVariableDictionary];
@@ -407,27 +400,6 @@
                   [show setReasonForFailure:@"Unresumable_File"];
                }
             }
-				else if ([message hasPrefix:@"A:"]) //MPlayer
-				{
-               double downloaded, percent, total;
-					NSString *downloadedString, *totalString;
-					[scanner setScanLocation:0];
-					[scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:nil];
-					if (![scanner scanDouble:&downloaded]) downloaded=0.0;
-					[scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:nil];
-					[scanner scanUpToString:@")" intoString:&downloadedString];
-					[scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:nil];
-					if (![scanner scanDouble:&total]) total=0.0;
-					[scanner scanUpToCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet] intoString:nil];
-					[scanner scanUpToString:@")" intoString:&totalString];
-					if (total>0) percent = (downloaded/total)*100;
-					else percent = 0.0;
-					if ([downloadedString length] < 7) downloadedString = [@"00:" stringByAppendingString:downloadedString];
-					[self setCurrentProgress:[NSString stringWithFormat:@"%.1f%% - (%@/%@) -- %@",percent,downloadedString,totalString,[show valueForKey:@"showName"]]];
-					[self setPercentage:percent];
-					[show setValue:[NSString stringWithFormat:@"Downloading: %.1f%%", percent] forKey:@"status"];
-               continue;
-				}
             else //Other
             {
                shortStatus = [NSString stringWithFormat:@"Initialising... -- %@", [show valueForKey:@"showName"]];
@@ -510,10 +482,21 @@
          [show setReasonForFailure:@"ShowNotFound"];
          [self addToLog:output noTag:YES];
       }
-      else if ([output hasPrefix:@"WARNING: No programmes are available for this pid with version(s): default (available versions: audiodescribed,signed)"])
+      else if ([output hasPrefix:@"WARNING: No programmes are available for this pid with version(s):"] ||
+               [output hasPrefix:@"INFO: No versions of this programme were selected"])
       {
-         [show setReasonForFailure:@"AudioDescribedOnly"];
-         [self addToLog:output noTag:YES];
+          NSScanner *versionScanner = [NSScanner scannerWithString:output];
+          [versionScanner scanUpToString:@"available versions:" intoString:nil];
+          [versionScanner scanString:@"available versions:" intoString:nil];
+          [versionScanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
+          NSString *availableVersions;
+          [versionScanner scanUpToString:@")" intoString:&availableVersions];
+          if ([availableVersions rangeOfString:@"audiodescribed"].location != NSNotFound ||
+              [availableVersions rangeOfString:@"signed"].location != NSNotFound)
+          {
+              [show setReasonForFailure:@"AudioDescribedOnly"];
+          }
+          [self addToLog:output noTag:YES];
       }
 		else if ([output hasPrefix:@"INFO:"] || [output hasPrefix:@"WARNING:"] || [output hasPrefix:@"ERROR:"] ||
                [output hasSuffix:@"default"] || [output hasPrefix:[show pid]])
