@@ -1645,12 +1645,10 @@ NSDictionary *radioFormats;
     else if ([prefsPanel isKeyWindow]) [prefsPanel performClose:self];
     else if ([mainWindow isKeyWindow])
     {
-        NSAlert *downloadAlert = [NSAlert alertWithMessageText:@"Are you sure you wish to quit?"
-                                                 defaultButton:@"Yes"
-                                               alternateButton:@"No"
-                                                   otherButton:nil
-                                     informativeTextWithFormat:nil];
-        NSInteger response = [downloadAlert runModal];
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = @"Are you sure you wish to quit?";
+		
+        NSInteger response = [alert runModal];
         if (response == NSAlertDefaultReturn) [mainWindow performClose:self];
     }
 }

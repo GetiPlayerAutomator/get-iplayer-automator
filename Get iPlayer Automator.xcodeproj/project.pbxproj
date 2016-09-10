@@ -16,10 +16,10 @@
 		39879DB016904B9F0050CA7D /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 39879DAE16904B9F0050CA7D /* NSString+HTML.m */; };
 		39ABB9C017FCCD9300B5D519 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D93AD85317DC9D6E00458B1C /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39AE5F5E1D329E390019E5EF /* rtmpdump in CopyFiles */ = {isa = PBXBuildFile; fileRef = 39AE5F5C1D3294C40019E5EF /* rtmpdump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39D5B1CC7F4B3E18DD17C657 /* libPods-Get iPlayer Automator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECAA3D8E54455D5B82E9D925 /* libPods-Get iPlayer Automator.a */; };
 		39D7C1BD1874AD7400B78698 /* StringTrimFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D7C1BC1874AD7400B78698 /* StringTrimFormatter.m */; };
 		39D7C1C01874AD9D00B78698 /* NilToStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D7C1BF1874AD9D00B78698 /* NilToStringTransformer.m */; };
 		39FD5E9619D370BD006BC47B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39FD5E9519D370BD006BC47B /* Images.xcassets */; };
-		6C74068CEC324635BDE822DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9479EEAC51F0610119A3D0FD /* libPods.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -97,6 +97,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06EF71A26E529A9A64050249 /* Pods-Get iPlayer Automator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Get iPlayer Automator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Get iPlayer Automator/Pods-Get iPlayer Automator.debug.xcconfig"; sourceTree = "<group>"; };
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -123,11 +124,8 @@
 		39D7C1BE1874AD9D00B78698 /* NilToStringTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NilToStringTransformer.h; sourceTree = "<group>"; };
 		39D7C1BF1874AD9D00B78698 /* NilToStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NilToStringTransformer.m; sourceTree = "<group>"; };
 		39FD5E9519D370BD006BC47B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Get iPlayer Automator/Images.xcassets"; sourceTree = "<group>"; };
-		507BB5D4712B147A19310DDC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Get iPlayer Automator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Get iPlayer Automator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9479EEAC51F0610119A3D0FD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCB319B8F1B07D73E9A1C214 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		D904F0491009F22E00D60BBF /* get_iplayer.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = get_iplayer.pl; path = ../get_iplayer.pl; sourceTree = "<group>"; };
 		D904F422100B077600D60BBF /* Programme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Programme.h; sourceTree = "<group>"; };
 		D904F423100B077600D60BBF /* Programme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Programme.m; sourceTree = "<group>"; };
@@ -200,6 +198,8 @@
 		DFC865E113E96BE200606599 /* ReasonForFailure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReasonForFailure.m; sourceTree = "<group>"; };
 		DFE5B67313E70AC20008571B /* plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; path = plugins; sourceTree = "<group>"; };
 		DFFF196613E96288007B52AC /* ReasonsForFailure.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ReasonsForFailure.plist; sourceTree = "<group>"; };
+		E3BCA9DA6B393FFDE3F76942 /* Pods-Get iPlayer Automator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Get iPlayer Automator.release.xcconfig"; path = "Pods/Target Support Files/Pods-Get iPlayer Automator/Pods-Get iPlayer Automator.release.xcconfig"; sourceTree = "<group>"; };
+		ECAA3D8E54455D5B82E9D925 /* libPods-Get iPlayer Automator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Get iPlayer Automator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,13 +212,22 @@
 				D941D99C1025DDA90012A75F /* AddressBook.framework in Frameworks */,
 				D941D9A01025DDCF0012A75F /* SystemConfiguration.framework in Frameworks */,
 				D93AD85417DC9D6E00458B1C /* Growl.framework in Frameworks */,
-				6C74068CEC324635BDE822DE /* libPods.a in Frameworks */,
+				39D5B1CC7F4B3E18DD17C657 /* libPods-Get iPlayer Automator.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0220EE5CE574E56BC7E0FCC7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				06EF71A26E529A9A64050249 /* Pods-Get iPlayer Automator.debug.xcconfig */,
+				E3BCA9DA6B393FFDE3F76942 /* Pods-Get iPlayer Automator.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,15 +270,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1ABB7669F45F255572F02FF6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				507BB5D4712B147A19310DDC /* Pods.debug.xcconfig */,
-				BCB319B8F1B07D73E9A1C214 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		29B97314FDCFA39411CA2CEA /* Get_iPlayer GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,7 +279,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				1ABB7669F45F255572F02FF6 /* Pods */,
+				0220EE5CE574E56BC7E0FCC7 /* Pods */,
 			);
 			name = "Get_iPlayer GUI";
 			sourceTree = "<group>";
@@ -324,7 +324,7 @@
 				D9158E06187150B000FBA515 /* CoreFoundation.framework */,
 				D91F9D53187151D600D4388B /* Foundation.framework */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
-				9479EEAC51F0610119A3D0FD /* libPods.a */,
+				ECAA3D8E54455D5B82E9D925 /* libPods-Get iPlayer Automator.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -464,16 +464,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Get iPlayer Automator" */;
 			buildPhases = (
-				5E162230D125E08FEE16FC78 /* Check Pods Manifest.lock */,
+				053EF30F62E65342CE9AD159 /* [CP] Check Pods Manifest.lock */,
 				D9CCF443102349ED009205BE /* Copy Frameworks */,
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				D975D7EB19A11DC400EEF909 /* Run Script */,
 				D943D2721B37B19D00452FCD /* CopyFiles */,
-				ABC64EB4CDE50D3043DB535C /* Embed Pods Frameworks */,
-				6BBECB0C5115B58584C537A9 /* Copy Pods Resources */,
 				D9B2CFC01D84B3A5004886EE /* ShellScript */,
+				12A27987B9A8A1BABB95E356 /* [CP] Embed Pods Frameworks */,
+				40A1016922366427E7FC6740 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -506,6 +506,7 @@
 				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* Get_iPlayer GUI */;
+			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -544,14 +545,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5E162230D125E08FEE16FC78 /* Check Pods Manifest.lock */ = {
+		053EF30F62E65342CE9AD159 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,34 +560,34 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		6BBECB0C5115B58584C537A9 /* Copy Pods Resources */ = {
+		12A27987B9A8A1BABB95E356 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Get iPlayer Automator/Pods-Get iPlayer Automator-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		ABC64EB4CDE50D3043DB535C /* Embed Pods Frameworks */ = {
+		40A1016922366427E7FC6740 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Get iPlayer Automator/Pods-Get iPlayer Automator-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D975D7EB19A11DC400EEF909 /* Run Script */ = {
@@ -696,7 +697,7 @@
 /* Begin XCBuildConfiguration section */
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 507BB5D4712B147A19310DDC /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 06EF71A26E529A9A64050249 /* Pods-Get iPlayer Automator.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -739,7 +740,7 @@
 		};
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BCB319B8F1B07D73E9A1C214 /* Pods.release.xcconfig */;
+			baseConfigurationReference = E3BCA9DA6B393FFDE3F76942 /* Pods-Get iPlayer Automator.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
