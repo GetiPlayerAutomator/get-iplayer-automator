@@ -19,10 +19,9 @@
 #import <AFNetworking/AFNetworking.h>
 
 static AppController *sharedController;
+
 bool runDownloads=NO;
 bool runUpdate=NO;
-NSDictionary *tvFormats;
-NSDictionary *radioFormats;
 
 @implementation AppController
 #pragma mark Overriden Methods
@@ -47,72 +46,9 @@ NSDictionary *radioFormats;
     //Look for Start notifications for ASS
     [nc addObserver:self selector:@selector(applescriptStartDownloads) name:@"StartDownloads" object:nil];
     
-    //Register Default Preferences
-    NSMutableDictionary *defaultValues = [[NSMutableDictionary alloc] init];
-    
-    NSString *defaultDownloadDirectory = @"~/Movies/TV Shows";
-    defaultValues[@"DownloadPath"] = [defaultDownloadDirectory stringByExpandingTildeInPath];
-    defaultValues[@"Proxy2"] = @"None";
-    defaultValues[@"CustomProxy"] = @"";
-    defaultValues[@"AutoRetryFailed"] = @YES;
-    defaultValues[@"AutoRetryTime"] = @"30";
-    defaultValues[@"AddCompletedToiTunes"] = @YES;
-    defaultValues[@"DefaultBrowser"] = @"Safari";
-    defaultValues[@"CacheBBC_TV"] = @YES;
-    defaultValues[@"CacheBBC_Radio"] = @NO;
-    defaultValues[@"CacheBBC_Podcasts"] = @NO;
-    defaultValues[@"CacheExpiryTime"] = @"4";
-    defaultValues[@"Verbose"] = @NO;
-    defaultValues[@"SeriesLinkStartup"] = @YES;
-    defaultValues[@"DownloadSubtitles"] = @NO;
-    defaultValues[@"AlwaysUseProxy"] = @NO;
-    defaultValues[@"XBMC_naming"] = @NO;
-    defaultValues[@"KeepSeriesFor"] = @"30";
-    defaultValues[@"RemoveOldSeries"] = @NO;
-    defaultValues[@"QuickCache"] = @YES;
-    defaultValues[@"TagShows"] = @YES;
-    defaultValues[@"TestProxy"] = @YES;
-    defaultValues[@"ShowDownloadedInSearch"] = @YES;
-    
-    defaultValues[@"AudioDescribedNew"] = @NO;
-    defaultValues[@"SignedNew"] = @NO;
-	
-	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
-    defaultValues = nil;
-    
-    // Migrate old AudioDescribed option
-    if ([settings objectForKey:@"AudioDescribed"]) {
-        [settings setObject:@YES forKey:@"AudioDescribedNew"];
-        [settings setObject:@YES forKey:@"SignedNew"];
-        [settings removeObjectForKey:@"AudioDescribed"];
-    }
-	
-	// Migrate proxy option
-	if ([settings objectForKey:@"Proxy"] && ![[settings objectForKey:@"Proxy"] isEqualToString:@"Provided"])
-	{
-		[settings setObject:[settings objectForKey:@"Proxy"] forKey:@"Proxy2"];
-		[settings removeObjectForKey:@"Proxy"];
-	}
-
-    // remove obsolete preferences
-    [settings removeObjectForKey:@"DefaultFormat"];
-    [settings removeObjectForKey:@"AlternateFormat"];
-    [settings removeObjectForKey:@"CacheITV_TV"];
-    [settings removeObjectForKey:@"Cache4oD_TV"];
-    
-    //Make sure Application Support folder exists
-    NSString *folder = @"~/Library/Application Support/Get iPlayer Automator/";
-    folder = [folder stringByExpandingTildeInPath];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:folder])
-    {
-        [fileManager createDirectoryAtPath:folder withIntermediateDirectories:NO attributes:nil error:nil];
-    }
-    [fileManager changeCurrentDirectoryPath:folder];
-    
     //Install Plugins If Needed
-    NSString *pluginPath = [folder stringByAppendingPathComponent:@"plugins"];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *pluginPath = [settingsController.applicationSupportFolderPath stringByAppendingPathComponent:@"plugins"];
     if (/*![fileManager fileExistsAtPath:pluginPath]*/TRUE)
     {
         [logger addToLog:@"Installing/Updating Get_iPlayer Plugins..." :self];
@@ -122,23 +58,16 @@ NSDictionary *radioFormats;
         [fileManager copyItemAtPath:providedPath toPath:pluginPath error:nil];
     }
     
-    
+	nilToEmptyStringTransformer = [[NilToStringTransformer alloc] init];
+	nilToAsteriskTransformer = [[NilToStringTransformer alloc] initWithString:@"*"];
+	[NSValueTransformer setValueTransformer:nilToEmptyStringTransformer forName:@"NilToEmptyStringTransformer"];
+	[NSValueTransformer setValueTransformer:nilToAsteriskTransformer forName:@"NilToAsteriskTransformer"];
+	
     //Initialize Arguments
     getiPlayerPath = [[NSString alloc] initWithString:[[NSBundle mainBundle] bundlePath]];
     getiPlayerPath = [getiPlayerPath stringByAppendingString:@"/Contents/Resources/get_iplayer.pl"];
     runScheduled=NO;
     quickUpdateFailed=NO;
-    nilToEmptyStringTransformer = [[NilToStringTransformer alloc] init];
-    nilToAsteriskTransformer = [[NilToStringTransformer alloc] initWithString:@"*"];
-    tvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
-    radioFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
-    itvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
-	
-    [NSValueTransformer setValueTransformer:nilToEmptyStringTransformer forName:@"NilToEmptyStringTransformer"];
-    [NSValueTransformer setValueTransformer:nilToAsteriskTransformer forName:@"NilToAsteriskTransformer"];
-    [NSValueTransformer setValueTransformer:tvFormatTransformer forName:@"TVFormatTransformer"];
-    [NSValueTransformer setValueTransformer:radioFormatTransformer forName:@"RadioFormatTransformer"];
-    [NSValueTransformer setValueTransformer:itvFormatTransformer forName:@"ITVFormatTransformer"];
 	
     verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"Verbose"];
     return self;
@@ -152,115 +81,16 @@ NSDictionary *radioFormats;
     
     //Read Queue & Series-Link from File
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    NSString *folder = @"~/Library/Application Support/Get iPlayer Automator/";
-    folder = [folder stringByExpandingTildeInPath];
-    if ([fileManager fileExistsAtPath: folder] == NO)
+	
+    if ([fileManager fileExistsAtPath:settingsController.applicationSupportFolderPath] == NO)
     {
-        [fileManager createDirectoryAtPath:folder withIntermediateDirectories:NO attributes:nil error:nil];
+        [fileManager createDirectoryAtPath:settingsController.applicationSupportFolderPath withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
     // remove obsolete cache files
-    [fileManager removeItemAtPath:[folder stringByAppendingPathComponent:@"itv.cache"] error:nil];
-    [fileManager removeItemAtPath:[folder stringByAppendingPathComponent:@"ch4.cache"] error:nil];
-    
-    NSString *filename = @"Queue.automatorqueue";
-    NSString *filePath = [folder stringByAppendingPathComponent:filename];
-    
-    NSDictionary * rootObject;
-    @try
-    {
-        rootObject = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-        NSArray *tempQueue = [rootObject valueForKey:@"queue"];
-        NSArray *tempSeries = [rootObject valueForKey:@"serieslink"];
-        lastUpdate = [rootObject valueForKey:@"lastUpdate"];
-        [queueController addObjects:tempQueue];
-        [pvrQueueController addObjects:tempSeries];
-    }
-    @catch (NSException *e)
-    {
-        [fileManager removeItemAtPath:filePath error:nil];
-        NSLog(@"Unable to load saved application data. Deleted the data file.");
-        rootObject=nil;
-    }
-    
-    //Read Format Preferences
-    
-    filename = @"Formats.automatorqueue";
-    filePath = [folder stringByAppendingPathComponent:filename];
-    
-    @try
-    {
-        rootObject = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-        [radioFormatController addObjects:[rootObject valueForKey:@"radioFormats"]];
-        [tvFormatController addObjects:[rootObject valueForKey:@"tvFormats"]];
-    }
-    @catch (NSException *e)
-    {
-        [fileManager removeItemAtPath:filePath error:nil];
-        NSLog(@"Unable to load saved application data. Deleted the data file.");
-        rootObject=nil;
-    }
-    if (!tvFormats || !radioFormats) {
-        [BBCDownload initFormats];
-    }
-    // clear obsolete formats
-    NSMutableArray *tempTVFormats = [[NSMutableArray alloc] initWithArray:[tvFormatController arrangedObjects]];
-    for (TVFormat *tvFormat in tempTVFormats) {
-        if (!tvFormats[[tvFormat format]]) {
-            [tvFormatController removeObject:tvFormat];
-        }
-    }
-    NSMutableArray *tempRadioFormats = [[NSMutableArray alloc] initWithArray:[radioFormatController arrangedObjects]];
-    for (RadioFormat *radioFormat in tempRadioFormats) {
-        if (!radioFormats[[radioFormat format]]) {
-            [radioFormatController removeObject:radioFormat];
-        }
-    }
-    
-    filename = @"ITVFormats.automator";
-    filePath = [folder stringByAppendingPathComponent:filename];
-    @try {
-        rootObject = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-        [itvFormatController addObjects:[rootObject valueForKey:@"itvFormats"]];
-    }
-    @catch (NSException *exception) {
-        [fileManager removeItemAtPath:filePath error:nil];
-        rootObject=nil;
-    }
-    
-    //Adds Defaults to Type Preferences
-    if ([[tvFormatController arrangedObjects] count] == 0)
-    {
-        TVFormat *format1 = [[TVFormat alloc] init];
-        [format1 setFormat:@"Flash - HD"];
-        TVFormat *format2 = [[TVFormat alloc] init];
-        [format2 setFormat:@"Flash - Very High"];
-        TVFormat *format3 = [[TVFormat alloc] init];
-        [format3 setFormat:@"Flash - High"];
-        [tvFormatController addObjects:@[format1,format2,format3]];
-    }
-    if ([[radioFormatController arrangedObjects] count] == 0)
-    {
-        RadioFormat *format1 = [[RadioFormat alloc] init];
-        [format1 setFormat:@"Flash AAC - High"];
-        RadioFormat *format2 = [[RadioFormat alloc] init];
-        [format2 setFormat:@"Flash AAC - Standard"];
-        RadioFormat *format3 = [[RadioFormat alloc] init];
-        [format3 setFormat:@"Flash AAC - Low"];
-        [radioFormatController addObjects:@[format1,format2,format3]];
-    }
-    if ([[itvFormatController arrangedObjects] count] == 0)
-    {
-        TVFormat *format0 = [[TVFormat alloc] init];
-        [format0 setFormat:@"Flash - HD"];
-        TVFormat *format1 = [[TVFormat alloc] init];
-        [format0 setFormat:@"Flash - Very High"];
-        TVFormat *format2 = [[TVFormat alloc] init];
-        [format1 setFormat:@"Flash - High"];
-        [itvFormatController addObjects:@[format0, format1, format2]];
-    }
-    
+    [fileManager removeItemAtPath:[settingsController.applicationSupportFolderPath stringByAppendingPathComponent:@"itv.cache"] error:nil];
+    [fileManager removeItemAtPath:[settingsController.applicationSupportFolderPath stringByAppendingPathComponent:@"ch4.cache"] error:nil];
+	
     //Growl Initialization
     @try {
         [GrowlApplicationBridge setGrowlDelegate:(id<GrowlApplicationBridgeDelegate>)@""];
@@ -269,11 +99,33 @@ NSDictionary *radioFormats;
         NSLog(@"ERROR: Growl initialisation failed: %@: %@", [e name], [e description]);
         [logger addToLog:[NSString stringWithFormat:@"ERROR: Growl initialisation failed: %@: %@", [e name], [e description]]];
     }
+	
+	NSString *filename = @"Queue.automatorqueue";
+	NSString *filePath = [settingsController.applicationSupportFolderPath stringByAppendingPathComponent:filename];
+	
+	NSDictionary * rootObject;
+	@try
+	{
+		rootObject = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+		NSArray *tempQueue = [rootObject valueForKey:@"queue"];
+		NSArray *tempSeries = [rootObject valueForKey:@"serieslink"];
+		lastUpdate = [rootObject valueForKey:@"lastUpdate"];
+		[queueController addObjects:tempQueue];
+		[pvrQueueController addObjects:tempSeries];
+	}
+	@catch (NSException *e)
+	{
+		[fileManager removeItemAtPath:filePath error:nil];
+		NSLog(@"Unable to load saved application data. Deleted the data file.");
+		rootObject=nil;
+	}
     
     //Remove SWFinfo
     NSString *infoPath = @"~/.swfinfo";
     infoPath = [infoPath stringByExpandingTildeInPath];
     if ([fileManager fileExistsAtPath:infoPath]) [fileManager removeItemAtPath:infoPath error:nil];
+	
+	[settingsController uiLoaded];
     
     [self updateCache:nil];
 }
@@ -1035,13 +887,17 @@ NSDictionary *radioFormats;
                 if ([[show complete] isEqualToNumber:@NO])
                 {
                     if ([[show tvNetwork] hasPrefix:@"ITV"])
-                        currentDownload = [[ITVDownload alloc] initWithProgramme:show itvFormats:[itvFormatController arrangedObjects] proxy:proxy logController:logger];
+                        currentDownload = [[ITVDownload alloc] initWithProgramme:show
+																	  itvFormats:settingsController.itvFormats
+																		   proxy:proxy
+																   logController:logger];
                     else
                         currentDownload = [[BBCDownload alloc] initWithProgramme:show
-                                                                       tvFormats:[tvFormatController arrangedObjects]
-                                                                    radioFormats:[radioFormatController arrangedObjects]
+                                                                       tvFormats:settingsController.tvFormats
+                                                                    radioFormats:settingsController.radioFormats
                                                                            proxy:proxy
-                                                                   logController:logger];
+                                                                   logController:logger
+															  settingsController:settingsController];
                     break;
                 }
             }
@@ -1250,13 +1106,17 @@ NSDictionary *radioFormats;
             if ([[nextShow complete] isEqualToNumber:@NO])
             {
                 if ([[nextShow tvNetwork] hasPrefix:@"ITV"])
-                    currentDownload = [[ITVDownload alloc] initWithProgramme:nextShow itvFormats:[itvFormatController arrangedObjects] proxy:proxy logController:logger];
+                    currentDownload = [[ITVDownload alloc] initWithProgramme:nextShow
+																  itvFormats:settingsController.itvFormats
+																	   proxy:proxy
+															   logController:logger];
                 else
                     currentDownload = [[BBCDownload alloc] initWithProgramme:nextShow
-                                                                   tvFormats:[tvFormatController arrangedObjects]
-                                                                radioFormats:[radioFormatController arrangedObjects]
+                                                                   tvFormats:settingsController.tvFormats
+                                                                radioFormats:settingsController.radioFormats
                                                                        proxy:proxy
-                                                               logController:logger];
+                                                               logController:logger
+														  settingsController:settingsController];
             }
         }
         @catch (NSException *e)
@@ -1659,40 +1519,26 @@ NSDictionary *radioFormats;
     [rootObject setValue:tempSeries forKey:@"serieslink"];
     [rootObject setValue:lastUpdate forKey:@"lastUpdate"];
     [NSKeyedArchiver archiveRootObject: rootObject toFile: filePath];
-    
-    filename = @"Formats.automatorqueue";
-    filePath = [folder stringByAppendingPathComponent:filename];
-    
-    rootObject = [NSMutableDictionary dictionary];
-    
-    [rootObject setValue:[tvFormatController arrangedObjects] forKey:@"tvFormats"];
-    [rootObject setValue:[radioFormatController arrangedObjects] forKey:@"radioFormats"];
-    [NSKeyedArchiver archiveRootObject:rootObject toFile:filePath];
-    
-    filename = @"ITVFormats.automator";
-    filePath = [folder stringByAppendingPathComponent:filename];
-    rootObject = [NSMutableDictionary dictionary];
-    [rootObject setValue:[itvFormatController arrangedObjects] forKey:@"itvFormats"];
-    [NSKeyedArchiver archiveRootObject:rootObject toFile:filePath];
-    
-    //Store Preferences in case of crash
-    [[NSUserDefaults standardUserDefaults] synchronize];
+	
+	[settingsController saveSettings];
 }
 
 - (IBAction)closeWindow:(id)sender
 {
-    if ([logger.window isKeyWindow]) [logger.window performClose:self];
-    else if ([historyWindow isKeyWindow]) [historyWindow performClose:self];
-    else if ([pvrPanel isKeyWindow]) [pvrPanel performClose:self];
-    else if ([prefsPanel isKeyWindow]) [prefsPanel performClose:self];
-    else if ([mainWindow isKeyWindow])
-    {
-		NSAlert *alert = [[NSAlert alloc] init];
-		alert.messageText = @"Are you sure you wish to quit?";
-		
-        NSInteger response = [alert runModal];
-        if (response == NSAlertDefaultReturn) [mainWindow performClose:self];
-    }
+	if (sender == mainWindow)
+	{
+		NSAlert *downloadAlert = [NSAlert alertWithMessageText:@"Are you sure you wish to quit?"
+												 defaultButton:@"Yes"
+											   alternateButton:@"No"
+												   otherButton:nil
+									 informativeTextWithFormat:@""];
+		NSInteger response = [downloadAlert runModal];
+		if (response == NSAlertDefaultReturn) [mainWindow performClose:self];
+	}
+	else
+	{
+		[sender close];
+	}
 }
 
 - (NSString *)escapeSpecialCharactersInString:(NSString *)string

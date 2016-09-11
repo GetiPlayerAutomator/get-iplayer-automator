@@ -7,16 +7,14 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
+#import "SettingsController.h"
 #import "Programme.h"
 #import "TVFormat.h"
 #import "RadioFormat.h"
 #import "Download.h"
 
 extern bool runDownloads;
-extern NSDictionary *tvFormats;
-extern NSDictionary *radioFormats;
-
-#import "Download.h"
 
 @interface BBCDownload : Download {
 	NSString *profileDirArg;
@@ -27,9 +25,11 @@ extern NSDictionary *radioFormats;
 	BOOL foundLastLine;
 	NSString *LastLine;
 	NSString *reasonForFailure;
+	
+	SettingsController *settingsController;
 }
-+ (void)initFormats;
-- (id)initWithProgramme:(Programme *)tempShow tvFormats:(NSArray *)tvFormatList radioFormats:(NSArray *)radioFormatList proxy:(HTTPProxy *)aProxy logController:(LogController *)logger;
+
+- (id)initWithProgramme:(Programme *)tempShow tvFormats:(NSArray *)tvFormatList radioFormats:(NSArray *)radioFormatList proxy:(HTTPProxy *)aProxy logController:(LogController *)logger settingsController:(SettingsController *)settings;
 - (void)processGetiPlayerOutput:(NSString *)outp;
 
 @end

@@ -11,15 +11,10 @@
 @implementation BBCDownload
 + (void)initFormats
 {
-   NSArray *tvFormatKeys = @[@"Flash - HD",@"Flash - Very High",@"Flash - High",@"Flash - Standard",@"Flash - Low"];
-   NSArray *tvFormatObjects = @[@"flashhd",@"flashvhigh",@"flashhigh",@"flashstd",@"flashlow"];
-   NSArray *radioFormatKeys = @[@"Flash AAC - High",@"Flash AAC - Standard",@"Flash AAC - Low"];
-   NSArray *radioFormatObjects = @[@"flashaachigh",@"flashaacstd",@"flashaaclow"];
-	tvFormats = [[NSDictionary alloc] initWithObjects:tvFormatObjects forKeys:tvFormatKeys];
-	radioFormats = [[NSDictionary alloc] initWithObjects:radioFormatObjects forKeys:radioFormatKeys];
+
 }
 #pragma mark Overridden Methods
-- (id)initWithProgramme:(Programme *)tempShow tvFormats:(NSArray *)tvFormatList radioFormats:(NSArray *)radioFormatList proxy:(HTTPProxy *)aProxy logController:(LogController *)logger
+- (id)initWithProgramme:(Programme *)tempShow tvFormats:(NSArray *)tvFormatList radioFormats:(NSArray *)radioFormatList proxy:(HTTPProxy *)aProxy logController:(LogController *)logger settingsController:(SettingsController *)settings
 {
 	if (!(self = [super initWithLogController:logger])) return nil;
 	runAgain = NO;
@@ -30,6 +25,7 @@
    reasonForFailure = @"None";
    defaultsPrefix = @"BBC_";
    proxy = aProxy;
+	settingsController = settings;
    
 	log = [[NSMutableString alloc] initWithString:@""];
 	nc = [NSNotificationCenter defaultCenter];
@@ -41,17 +37,13 @@
    NSBundle *bundle = [NSBundle mainBundle];
 	NSString *getiPlayerPath = [bundle pathForResource:@"get_iplayer" ofType:@"pl"];
 	downloadPath = [[NSString alloc] initWithString:[[NSUserDefaults standardUserDefaults] valueForKey:@"DownloadPath"]];
-   
-   //Initialize Formats
-   if (!tvFormats || !radioFormats) {
-      [BBCDownload initFormats];
-   }
+	
    NSMutableString *temp_Format;
    temp_Format = [[NSMutableString alloc] initWithString:@"--modes="];
    for (RadioFormat *format in radioFormatList)
-      [temp_Format appendFormat:@"%@,", [radioFormats valueForKey:[format format]]];
+      [temp_Format appendFormat:@"%@,", [settingsController.radioFormatDict valueForKey:[format format]]];
    for (TVFormat *format in tvFormatList)
-      [temp_Format appendFormat:@"%@,",[tvFormats valueForKey:[format format]]];
+      [temp_Format appendFormat:@"%@,",[settingsController.tvFormatDict valueForKey:[format format]]];
    NSString *formatArg = [NSString stringWithString:temp_Format];
    
    //Set Proxy Arguments

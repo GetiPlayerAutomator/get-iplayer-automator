@@ -12,13 +12,13 @@
 #import "ITVDownload.h"
 #import "Download.h"
 #import <IOKit/pwr_mgt/IOPMLib.h>
-#import "NilToStringTransformer.h"
-#import "EmptyToStringTransformer.h"
 #import "LogController.h"
 #import "GiASearch.h"
 #import "GetCurrentWebpage.h"
 #import "GetiPlayerArguments.h"
 #import "GetiPlayerProxy.h"
+#import "NilToStringTransformer.h"
+#import "SettingsController.h"
 
 @interface AppController : NSObject {
 	//General
@@ -27,6 +27,7 @@
 	IBOutlet NSApplication *application;
    IBOutlet NSWindow *historyWindow;
    IOPMAssertionID powerAssertionID;
+	IBOutlet SettingsController *settingsController;
 	
 	//Update Components
 	NSTask *getiPlayerUpdateTask;
@@ -75,15 +76,6 @@
 	Download *currentDownload;
 	IBOutlet NSToolbarItem *stopButton;
 	IBOutlet NSToolbarItem *startButton;
-	
-	//Preferences
-	NSMutableArray *tvFormatList;
-	NSMutableArray *radioFormatList;
-   NSMutableArray *itvFormatList;
-	IBOutlet NSArrayController *tvFormatController;
-	IBOutlet NSArrayController *radioFormatController;
-   IBOutlet NSArrayController *itvFormatController;
-   IBOutlet NSPanel *prefsPanel;
    
 	//Scheduling a Start
 	IBOutlet NSPanel *scheduleWindow;
@@ -98,15 +90,9 @@
    IBOutlet NSTableView *solutionsTableView;
    NSDictionary *solutionsDictionary;
    
-   
    //PVR list editing
    NilToStringTransformer *nilToEmptyStringTransformer;
    NilToStringTransformer *nilToAsteriskTransformer;
-    
-   // Format preferences
-   EmptyToStringTransformer *tvFormatTransformer;
-   EmptyToStringTransformer *radioFormatTransformer;
-   EmptyToStringTransformer *itvFormatTransformer;
    
    //Verbose Logging
    BOOL verbose;

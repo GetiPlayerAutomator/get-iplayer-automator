@@ -39,12 +39,21 @@
                 <outlet property="searchField" destination="689" id="GPC-bQ-Zy7"/>
                 <outlet property="searchIndicator" destination="489" id="687"/>
                 <outlet property="searchResultsTable" destination="493" id="q2l-ti-Osz"/>
+                <outlet property="settingsController" destination="z07-he-V1Z" id="aCg-WD-6VO"/>
                 <outlet property="solutionsArrayController" destination="1402" id="1403"/>
                 <outlet property="solutionsTableView" destination="1389" id="1400"/>
                 <outlet property="solutionsWindow" destination="1374" id="1401"/>
                 <outlet property="startButton" destination="481" id="930"/>
                 <outlet property="stopButton" destination="482" id="931"/>
                 <outlet property="tvFormatController" destination="1106" id="1145"/>
+            </connections>
+        </customObject>
+        <customObject id="z07-he-V1Z" customClass="SettingsController">
+            <connections>
+                <outlet property="itvFormatController" destination="1432" id="UGD-Wx-DsF"/>
+                <outlet property="prefsPanel" destination="547" id="TMh-I3-bif"/>
+                <outlet property="radioFormatController" destination="1134" id="suk-rS-YGp"/>
+                <outlet property="tvFormatController" destination="1106" id="mp4-Qr-tDe"/>
             </connections>
         </customObject>
         <arrayController objectClassName="ReasonForFailure" id="1402" userLabel="SolutionsArrayController">
