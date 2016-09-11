@@ -471,9 +471,9 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				D975D7EB19A11DC400EEF909 /* Run Script */,
 				D943D2721B37B19D00452FCD /* CopyFiles */,
-				D9B2CFC01D84B3A5004886EE /* ShellScript */,
 				12A27987B9A8A1BABB95E356 /* [CP] Embed Pods Frameworks */,
 				40A1016922366427E7FC6740 /* [CP] Copy Pods Resources */,
+				D9B2CFC01D84B3A5004886EE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -699,7 +699,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 06EF71A26E529A9A64050249 /* Pods-Get iPlayer Automator.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -742,7 +742,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3BCA9DA6B393FFDE3F76942 /* Pods-Get iPlayer Automator.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
