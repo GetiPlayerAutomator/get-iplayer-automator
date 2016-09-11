@@ -52,7 +52,7 @@ NSDictionary *radioFormats;
     
     NSString *defaultDownloadDirectory = @"~/Movies/TV Shows";
     defaultValues[@"DownloadPath"] = [defaultDownloadDirectory stringByExpandingTildeInPath];
-    defaultValues[@"Proxy"] = @"Provided";
+    defaultValues[@"Proxy2"] = @"None";
     defaultValues[@"CustomProxy"] = @"";
     defaultValues[@"AutoRetryFailed"] = @YES;
     defaultValues[@"AutoRetryTime"] = @"30";
@@ -76,22 +76,30 @@ NSDictionary *radioFormats;
     
     defaultValues[@"AudioDescribedNew"] = @NO;
     defaultValues[@"SignedNew"] = @NO;
-    
+	
+	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
     defaultValues = nil;
     
-    //Migrate old AudioDescribed option
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"AudioDescribed"]) {
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"AudioDescribedNew"];
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:@"SignedNew"];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AudioDescribed"];
+    // Migrate old AudioDescribed option
+    if ([settings objectForKey:@"AudioDescribed"]) {
+        [settings setObject:@YES forKey:@"AudioDescribedNew"];
+        [settings setObject:@YES forKey:@"SignedNew"];
+        [settings removeObjectForKey:@"AudioDescribed"];
     }
+	
+	// Migrate proxy option
+	if ([settings objectForKey:@"Proxy"] && ![[settings objectForKey:@"Proxy"] isEqualToString:@"Provided"])
+	{
+		[settings setObject:[settings objectForKey:@"Proxy"] forKey:@"Proxy2"];
+		[settings removeObjectForKey:@"Proxy"];
+	}
 
     // remove obsolete preferences
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"DefaultFormat"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"AlternateFormat"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CacheITV_TV"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"Cache4oD_TV"];
+    [settings removeObjectForKey:@"DefaultFormat"];
+    [settings removeObjectForKey:@"AlternateFormat"];
+    [settings removeObjectForKey:@"CacheITV_TV"];
+    [settings removeObjectForKey:@"Cache4oD_TV"];
     
     //Make sure Application Support folder exists
     NSString *folder = @"~/Library/Application Support/Get iPlayer Automator/";
@@ -125,11 +133,13 @@ NSDictionary *radioFormats;
     tvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
     radioFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
     itvFormatTransformer = [[EmptyToStringTransformer alloc] initWithString:@"Please select..."];
+	
     [NSValueTransformer setValueTransformer:nilToEmptyStringTransformer forName:@"NilToEmptyStringTransformer"];
     [NSValueTransformer setValueTransformer:nilToAsteriskTransformer forName:@"NilToAsteriskTransformer"];
     [NSValueTransformer setValueTransformer:tvFormatTransformer forName:@"TVFormatTransformer"];
     [NSValueTransformer setValueTransformer:radioFormatTransformer forName:@"RadioFormatTransformer"];
     [NSValueTransformer setValueTransformer:itvFormatTransformer forName:@"ITVFormatTransformer"];
+	
     verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"Verbose"];
     return self;
 }
@@ -139,7 +149,6 @@ NSDictionary *radioFormats;
     //Initialize Search Results Click Actions
     [searchResultsTable setTarget:self];
     [searchResultsTable setDoubleAction:@selector(addToQueue:)];
-    
     
     //Read Queue & Series-Link from File
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -268,10 +277,12 @@ NSDictionary *radioFormats;
     
     [self updateCache:nil];
 }
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application
 {
     return YES;
 }
+
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
     if (runDownloads)
@@ -332,10 +343,12 @@ NSDictionary *radioFormats;
     }
     else return YES;
 }
+
 - (void)windowWillClose:(NSNotification *)note
 {
     if ([[note object] isEqualTo:mainWindow]) [application terminate:self];
 }
+
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
     //End Downloads if Running
@@ -344,6 +357,7 @@ NSDictionary *radioFormats;
     
     [self saveAppData];
 }
+
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update
 {
     @try
@@ -362,6 +376,7 @@ NSDictionary *radioFormats;
         [logger addToLog:[NSString stringWithFormat:@"ERROR: Growl notification failed (updater): %@: %@", [e name], [e description]]];
     }
 }
+
 #pragma mark Cache Update
 - (IBAction)updateCache:(id)sender
 {
@@ -518,6 +533,7 @@ NSDictionary *radioFormats;
         
     }
 }
+
 - (void)updateCacheForType:(NSString *)type
 {
     [logger addToLog:[NSString stringWithFormat:@"    Retrieving %@ index feeds.",type] :nil];
@@ -530,6 +546,7 @@ NSDictionary *radioFormats;
                                           ];
     [download resume];
 }
+
 - (void)indexRequestFinished:(NSHTTPURLResponse *)response downloadLocation:(NSURL *)downloadLocation typeUpdated:(NSString *)typeUpdated
 {
     if (response.statusCode != 200)
@@ -558,6 +575,7 @@ NSDictionary *radioFormats;
         }
     }
 }
+
 - (void)dataReady:(NSNotification *)n
 {
     NSData *d;
@@ -606,6 +624,7 @@ NSDictionary *radioFormats;
     if (getiPlayerUpdateTask && !matches)
         [[getiPlayerUpdatePipe fileHandleForReading] readInBackgroundAndNotify];
 }
+
 - (void)getiPlayerUpdateFinished
 {
     runUpdate=NO;
@@ -771,6 +790,7 @@ NSDictionary *radioFormats;
         [logger addToLog:@"Download(s) are still running." :self];
     }
 }
+
 - (IBAction)forceUpdate:(id)sender
 {
     [self updateCache:@"force"];
@@ -781,6 +801,7 @@ NSDictionary *radioFormats;
     [mainWindow makeKeyAndOrderFront:self];
     [mainWindow makeFirstResponder:searchField];
 }
+
 - (IBAction)mainSearch:(id)sender
 {
     if([searchField.stringValue length] > 0)
@@ -795,6 +816,7 @@ NSDictionary *radioFormats;
                                                     withTarget:self];
     }
 }
+
 - (void)searchFinished:(NSArray *)results
 {
     [searchField setEnabled:YES];
@@ -812,6 +834,7 @@ NSDictionary *radioFormats;
     }
     currentSearch = nil;
 }
+
 #pragma mark Queue
 - (NSArray *)queueArray
 {
@@ -821,6 +844,7 @@ NSDictionary *radioFormats;
 {
     queueArray = [NSMutableArray arrayWithArray:queue];
 }
+
 - (IBAction)addToQueue:(id)sender
 {
     for (Programme *show in resultsController.selectedObjects)
@@ -833,6 +857,7 @@ NSDictionary *radioFormats;
         }
     }
 }
+
 - (IBAction)getName:(id)sender
 {
     for (Programme *p in queueController.selectedObjects)
@@ -847,6 +872,7 @@ NSDictionary *radioFormats;
     Programme *p = [GetCurrentWebpage getCurrentWebpage:logger];
     if (p) [queueController addObject:p];
 }
+
 - (IBAction)removeFromQueue:(id)sender
 {
     //Check to make sure one of the shows isn't currently downloading.
@@ -881,6 +907,7 @@ NSDictionary *radioFormats;
         [queueController remove:self];
     }
 }
+
 - (IBAction)hidePvrShow:(id)sender
 {
     NSArray *temp_queue = [queueController selectedObjects];
@@ -894,6 +921,7 @@ NSDictionary *radioFormats;
         }
     }
 }
+
 #pragma mark Download Controller
 - (IBAction)startDownloads:(id)sender
 {
@@ -1044,6 +1072,7 @@ NSDictionary *radioFormats;
             runScheduled=NO;
     }
 }
+
 - (IBAction)stopDownloads:(id)sender
 {
     IOPMAssertionRelease(powerAssertionID);
@@ -1074,6 +1103,7 @@ NSDictionary *radioFormats;
     
     [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(fixDownloadStatus:) userInfo:currentDownload repeats:NO];
 }
+
 - (void)fixDownloadStatus:(NSNotification *)note
 {
     if (!runDownloads)
@@ -1085,6 +1115,7 @@ NSDictionary *radioFormats;
     else
         NSLog(@"fixDownloadStatus handler did not run because downloads appear to be running again");
 }
+
 - (void)setPercentage:(NSNotification *)note
 {
     if ([note userInfo])
@@ -1115,6 +1146,7 @@ NSDictionary *radioFormats;
         [currentIndicator startAnimation:nil];
     }
 }
+
 - (void)setProgress:(NSNotification *)note
 {
     if (!runUpdate)
@@ -1126,6 +1158,7 @@ NSDictionary *radioFormats;
         [mainWindow setDocumentEdited:YES];
     }
 }
+
 - (void)nextDownload:(NSNotification *)note
 {
     if (runDownloads)
@@ -1325,6 +1358,7 @@ NSDictionary *radioFormats;
     }
     currentPVRSearch = nil;
 }
+
 - (IBAction)addToAutoRecord:(id)sender
 {
     NSArray *selected = [[NSArray alloc] initWithArray:[pvrResultsController selectedObjects]];
@@ -1353,6 +1387,7 @@ NSDictionary *radioFormats;
         }
     }
 }
+
 - (IBAction)addSeriesLinkToQueue:(id)sender
 {
     if ([[pvrQueueController arrangedObjects] count] > 0 && !runUpdate)
@@ -1373,6 +1408,7 @@ NSDictionary *radioFormats;
         [self performSelectorOnMainThread:@selector(startDownloads:) withObject:self waitUntilDone:NO];
     }
 }
+
 - (void)seriesLinkToQueueThread
 {
     @autoreleasepool {
@@ -1428,6 +1464,7 @@ NSDictionary *radioFormats;
         [pvrQueueController performSelectorOnMainThread:@selector(removeObjects:) withObject:seriesToBeRemoved waitUntilDone:NO];
     }
 }
+
 - (void)seriesLinkFinished:(NSNotification *)note
 {
     NSLog(@"Thread Finished Notification Received");
@@ -1453,6 +1490,7 @@ NSDictionary *radioFormats;
 {
     [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(seriesLinkFinished2:) userInfo:currentProgress repeats:NO];
 }
+
 - (void)seriesLinkFinished2:(NSNotification *)note
 {
     NSLog(@"Second Check");
@@ -1465,6 +1503,7 @@ NSDictionary *radioFormats;
     }
     NSLog(@"Definitely shouldn't show an updating series-link thing!");
 }
+
 - (BOOL)processAutoRecordData:(NSString *)autoRecordData2 forSeries:(Series *)series2
 {
     BOOL oneFound=NO;
@@ -1639,6 +1678,7 @@ NSDictionary *radioFormats;
     //Store Preferences in case of crash
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
 - (IBAction)closeWindow:(id)sender
 {
     if ([logger.window isKeyWindow]) [logger.window performClose:self];
@@ -1654,6 +1694,7 @@ NSDictionary *radioFormats;
         if (response == NSAlertDefaultReturn) [mainWindow performClose:self];
     }
 }
+
 - (NSString *)escapeSpecialCharactersInString:(NSString *)string
 {
     NSArray *characters = @[@"+", @"-", @"&", @"!", @"(", @")", @"{" ,@"}",
@@ -1663,11 +1704,13 @@ NSDictionary *radioFormats;
     
     return string;
 }
+
 - (void)thirtyTwoBitModeAlert
 {
     if ([[NSAlert alertWithMessageText:@"File could not be added to iTunes," defaultButton:@"Help Me!" alternateButton:@"Do nothing" otherButton:nil informativeTextWithFormat:@"This is usually fixed by running iTunes in 32-bit mode. Would you like instructions to do this?"] runModal] == NSAlertDefaultReturn)
         [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://support.apple.com/kb/TS3771"]];
 }
+
 - (void)addToiTunesThread:(Programme *)show
 {
     @autoreleasepool {
@@ -1734,6 +1777,7 @@ NSDictionary *radioFormats;
         }
     }
 }
+
 - (void)cleanUpPath:(Programme *)show
 {
     
@@ -1799,6 +1843,7 @@ NSDictionary *radioFormats;
         [show setSeason:season];
     }
 }
+
 - (IBAction)chooseDownloadPath:(id)sender
 {
     NSOpenPanel *openPanel = [[NSOpenPanel alloc] init];
@@ -1810,10 +1855,12 @@ NSDictionary *radioFormats;
     NSArray *urls = [openPanel URLs];
     [[NSUserDefaults standardUserDefaults] setValue:[urls[0] path] forKey:@"DownloadPath"];
 }
+
 - (IBAction)showFeedback:(id)sender
 {
     [JRFeedbackController showFeedback];
 }
+
 - (IBAction)restoreDefaults:(id)sender
 {
     NSUserDefaults *sharedDefaults = [NSUserDefaults standardUserDefaults];
@@ -1834,6 +1881,7 @@ NSDictionary *radioFormats;
     [sharedDefaults removeObjectForKey:@"AlwaysUseProxy"];
     [sharedDefaults removeObjectForKey:@"XBMC_naming"];
 }
+
 - (void)applescriptStartDownloads
 {
     runScheduled=YES;
@@ -1863,10 +1911,12 @@ NSDictionary *radioFormats;
         [alert runModal];
     }
 }
+
 - (IBAction)cancelSchedule:(id)sender
 {
     [scheduleWindow close];
 }
+
 - (IBAction)scheduleStart:(id)sender
 {
     NSDate *startTime = [datePicker dateValue];
@@ -1892,6 +1942,7 @@ NSDictionary *radioFormats;
     runScheduled=YES;
     [mainWindow setDocumentEdited:YES];
 }
+
 - (void)runScheduledDownloads:(NSTimer *)theTimer
 {
     [interfaceTimer invalidate];
@@ -1903,6 +1954,7 @@ NSDictionary *radioFormats;
     scheduleTimer=nil;
     [self forceUpdate:self];
 }
+
 - (void)updateScheduleStatus:(NSTimer *)theTimer
 {
     NSDate *startTime = [scheduleTimer fireDate];
@@ -1919,6 +1971,7 @@ NSDictionary *radioFormats;
     [currentIndicator setIndeterminate:YES];
     [currentIndicator startAnimation:self];
 }
+
 - (void)stopTimer:(id)sender
 {
     [interfaceTimer invalidate];

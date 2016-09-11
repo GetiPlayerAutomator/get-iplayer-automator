@@ -36,7 +36,7 @@
     NSLog(@"INFO: Loading proxy settings...");
     [_logger addToLog:@"\n\nINFO: Loading proxy settings..."];
     [proxyDict removeAllObjects];
-    NSString *proxyOption = [[NSUserDefaults standardUserDefaults] valueForKey:@"Proxy"];
+    NSString *proxyOption = [[NSUserDefaults standardUserDefaults] valueForKey:@"Proxy2"];
     if ([proxyOption isEqualToString:@"Custom"])
     {
         NSString *customProxy = [[NSUserDefaults standardUserDefaults] valueForKey:@"CustomProxy"];
