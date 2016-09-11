@@ -20,8 +20,7 @@
 	//Register Default Preferences
 	NSMutableDictionary *defaultValues = [[NSMutableDictionary alloc] init];
 	
-	NSString *defaultDownloadDirectory = @"~/Movies/TV Shows";
-	defaultValues[@"DownloadPath"] = [defaultDownloadDirectory stringByExpandingTildeInPath];
+	defaultValues[@"DownloadPath"] = [@"~/Movies/TV Shows" stringByExpandingTildeInPath];
 	defaultValues[@"Proxy2"] = @"None";
 	defaultValues[@"CustomProxy"] = @"";
 	defaultValues[@"AutoRetryFailed"] = @YES;
