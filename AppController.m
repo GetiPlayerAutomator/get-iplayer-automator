@@ -1238,7 +1238,7 @@ bool runUpdate=NO;
         BOOL add=YES;
         for (Programme *queuedShow in queuedObjects)
         {
-            if ([[show showName] isEqualToString:[queuedShow showName]] && [show tvNetwork] == [queuedShow tvNetwork])
+            if ([[show showName] isEqualToString:[queuedShow showName]] && [[show tvNetwork] isEqualToString:[queuedShow tvNetwork]])
                 add=NO;
         }
         if (add)
