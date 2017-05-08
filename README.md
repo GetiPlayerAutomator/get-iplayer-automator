@@ -1,3 +1,7 @@
+## 2017-05-08: GiA has a new home:
+
+<https://github.com/Ascoware/get-iplayer-automator>
+
 ## 2017-04-26: BBC support is dead until further notice. GiA is currently unable to download iPlayer programmes.
 
 get-iplayer-automator
