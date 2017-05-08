@@ -2,7 +2,7 @@
 
 <https://github.com/Ascoware/get-iplayer-automator>
 
-## 2017-04-26: BBC support is dead until further notice. GiA is currently unable to download iPlayer programmes.
+## 2017-04-26: BBC support is dead until further notice. GiA is currently unable to download iPlayer programmes. GO TO NEW REPO ABOVE.
 
 get-iplayer-automator
 =====================
